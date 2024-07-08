@@ -19,7 +19,6 @@ const Preload = () => {
     useEffect(() => {
         const verificarAutenticacao = async () => {
             const session = await getSessao();
-            console.log(session);
 
             if (session) {
 
@@ -37,7 +36,6 @@ const Preload = () => {
                     return;
 
                 }
-
                 // caso o usuário não tenha sessão, redirecionar para a tela de Login caso não seja a primeira vez que o usuário entra no aplicativo
             }
             navigator.reset({
