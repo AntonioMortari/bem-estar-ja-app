@@ -1,10 +1,13 @@
 import 'react-native-gesture-handler';
 
 import { StyleSheet, View } from 'react-native';
+
+import { PaperProvider, Text } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import * as SplashScreen from 'expo-splash-screen';
-import { PaperProvider, Text } from 'react-native-paper';
+
 import { theme } from './src/theme/paper';
+import { AuthContextProvider } from './src/contexts/Auth';
 
 import {
   Montserrat_400Regular,
@@ -13,6 +16,7 @@ import {
   Montserrat_700Bold,
   useFonts
 } from '@expo-google-fonts/montserrat';
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,11 +36,13 @@ export default function App() {
   SplashScreen.hideAsync();
 
   return (
-    <PaperProvider theme={theme}>
-      <View style={styles.statusBarHeight}>
+    <AuthContextProvider>
+      <PaperProvider theme={theme}>
+        <View style={styles.statusBarHeight}>
           <Text variant='titleLarge'>Olá, Mundo!</Text>
-      </View>
-    </PaperProvider>
+        </View>
+      </PaperProvider>
+    </AuthContextProvider>
   );
 }
 

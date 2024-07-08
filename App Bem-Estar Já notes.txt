@@ -12,6 +12,12 @@ Ver Agendamentos (Cancelados, Agendados e concluídos)
 Visualizar detalhes de serviços e profissionais
 Trocar dados de acesso e dados pessoais
 
+Tabelas
+Usuarios - tabela que armazenará credenciais dos usuários do aplicativo
+id
+email
+senha (hash)
+
 Profissionais - tabela que armazenará os profissionais qe se cadastram no aplicativo, extende a tabela de usuário
 nome
 area_atuacao
@@ -19,9 +25,6 @@ agenda_id
 sobre
 foto_perfil
 outras_informacoes
-
-Tabelas
-Usuarios - tabela que armazenará credenciais dos usuários do aplicativo
 
 Clientes - tabela que armazenará os clientes que se cadastram no aplicativo, extende a tabela de usuário
 id - mesmo id de usuário
@@ -59,7 +62,7 @@ massoterapia
 estética e massoterapia
 
 Agenda
-profissional_id
+id
 dia_semana
 hora_inicio
 hora_fim
