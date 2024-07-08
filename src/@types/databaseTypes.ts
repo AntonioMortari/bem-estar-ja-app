@@ -1,15 +1,15 @@
 
 
 export enum Tabelas{
-    agenda,
-    agendamento,
-    area_atuacao,
-    avaliacoes,
-    clientes,
-    enderecos,
-    procedimentos,
-    profissionais,
-    servicos
+    agenda = 'agenda',
+    agendamento = 'agendamento',
+    area_atuacao = 'area_atuacao',
+    avaliacoes= 'avaliacoes',
+    clientes = 'clientes',
+    enderecos = 'enderecos',
+    procedimentos = 'procedimentos',
+    profissionais = 'profissionais',
+    servicos = 'servicos'
 }
 
 export interface ICliente{
