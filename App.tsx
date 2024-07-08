@@ -6,8 +6,9 @@ import { PaperProvider, Text } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { theme } from './src/theme/paper';
-import { AuthContextProvider } from './src/contexts/Auth';
+import { theme } from '@/theme/paper';
+import { AuthContextProvider } from '@/contexts/Auth';
+import { Router } from '@/routes';
 
 import {
   Montserrat_400Regular,
@@ -39,7 +40,7 @@ export default function App() {
     <AuthContextProvider>
       <PaperProvider theme={theme}>
         <View style={styles.statusBarHeight}>
-          <Text variant='titleLarge'>Olá, Mundo!</Text>
+          <Router />
         </View>
       </PaperProvider>
     </AuthContextProvider>
