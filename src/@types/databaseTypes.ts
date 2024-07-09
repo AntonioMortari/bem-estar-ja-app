@@ -17,7 +17,8 @@ export interface ICliente{
     cpf: string;
     nome: string;
     data_nascimento: Date;
-    foto_perfil?: string; 
+    foto_perfil?: string;
+    genero: 'F' | 'M' | 'O' 
 }
 
 export interface IEndereco{

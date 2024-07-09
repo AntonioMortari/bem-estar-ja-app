@@ -30,8 +30,23 @@ const logout = async () => {
     }
 }
 
+const cadastrar = async (email: string, senha: string) => {
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password: senha
+    });
+
+    if(error){
+        console.log('ERRO AO FAZER CADASTRO: ', error);
+        return error.message;
+    }
+
+    return data;
+}
+
 export const userService = {
     getSessao,
     login,
-    logout
+    logout,
+    cadastrar
 }

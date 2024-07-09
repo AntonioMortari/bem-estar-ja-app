@@ -14,10 +14,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import DatePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { useNavigation } from '@react-navigation/native';
+import { useCadastro } from '@/hooks/useCadastro';
 
 type TCadastro1FormData = z.infer<typeof cadastro1Schema>
 
 const Cadastro1 = () => {
+    const { handleDadosPessoais } = useCadastro();
+
     const [dataNascimento, setDataNascimento] = useState<Date>(new Date());
     const [genero, setGenero] = useState<'F' | 'M' | 'O'>('F');
 
@@ -36,7 +39,12 @@ const Cadastro1 = () => {
     };
 
     const onSubmit = (data: TCadastro1FormData) => {
-        console.log(data);
+        handleDadosPessoais({
+            cpf: data.cpf,
+            nome: data.nome,
+            dataNascimento, // data do datePicker
+            genero // estado gênero
+        });
         navigator.navigate('Cadastro2');
     }
 
@@ -48,7 +56,7 @@ const Cadastro1 = () => {
         >
 
             <Controller
-            // campo de cpf
+                // campo de cpf
                 control={control}
                 name='cpf'
                 render={({ field: { onChange, value } }) => (
@@ -72,7 +80,7 @@ const Cadastro1 = () => {
             />
 
             <Controller
-            // campo de nome
+                // campo de nome
                 control={control}
                 name='nome'
                 render={({ field: { onChange, value } }) => (

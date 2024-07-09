@@ -6,16 +6,26 @@ import { cadastro3Schema } from '@/validations/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HelperText, TextInput } from 'react-native-paper';
 import { PasswordInput } from '@/components/shared/PasswordInput';
+import { useCadastro } from '@/hooks/useCadastro';
+import { useAuth } from '@/hooks/useAuth';
 
 type TCadastro3FormData = z.infer<typeof cadastro3Schema>
 
 const Cadastro3 = () => {
+    const { handleDadosAcesso,dadosEndereco, dadosPessoais } = useCadastro();
+    const { cadastrar } = useAuth();
+
     const { handleSubmit, formState: { errors }, control } = useForm<TCadastro3FormData>({
         resolver: zodResolver(cadastro3Schema)
     });
 
-    const onSubmit = (data: TCadastro3FormData) => {
-        console.log(data);
+    const onSubmit = async (data: TCadastro3FormData) => {
+        handleDadosAcesso(data);
+
+        if(dadosPessoais && dadosEndereco){
+            await cadastrar(dadosPessoais, dadosEndereco, data);
+        }
+
     }
 
     return (

@@ -1,39 +1,6 @@
 import { createContext, ReactNode, useCallback, useState } from 'react';
 
-interface IDadosPessoais {
-    cpf: string;
-    nome: string;
-    genero: 'M' | 'F' | 'O';
-    dataNascimento: Date;
-}
-
-interface IDadosEndereco {
-    cep: string;
-    logradouro: string;
-    estado: string;
-    cidade: string;
-    complemento?: string;
-    numero: number | string;
-}
-
-interface IDadosAcesso {
-    email: string;
-    senha: string;
-}
-
-interface ICadastroContextValues {
-    dadosPessoais: IDadosPessoais | null;
-    dadosEndereco: IDadosEndereco | null;
-    dadosAcesso: IDadosAcesso | null;
-
-    handleDadosPessoais: (data: IDadosPessoais) => void;
-    handleDadosEndereco: (data: IDadosEndereco) => void;
-    handleDadosAcesso: (data: IDadosAcesso) => void;
-}
-
-interface ICadastroContextProviderProps {
-    children: ReactNode
-}
+import { ICadastroContextProviderProps, ICadastroContextValues, IDadosAcesso, IDadosEndereco, IDadosPessoais } from '@/@types/contexts/CadastroContext';
 
 const CadastroContext = createContext({} as ICadastroContextValues);
 
