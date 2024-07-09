@@ -17,7 +17,7 @@ const OnboardingScreen = () => {
 
     const goLogin = () => {
         // navega para a tela de login
-        navigation.navigate('Login')
+        navigation.navigate('Login');
     }
 
     return (

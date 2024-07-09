@@ -1,13 +1,20 @@
+import { useAuth } from '@/hooks/useAuth';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 
 const Tabs = createBottomTabNavigator();
 
 const AppClienteRoutes = () => {
+    const { handleLogout } = useAuth();
 
-    return(
+    return (
         <Tabs.Navigator>
-            <Tabs.Screen name='Home' component={() => <Text variant='titleLarge'>Tela Home</Text>} />
+            <Tabs.Screen name='Home' component={() => (
+                <>
+                    <Text variant='titleLarge'>Tela Home</Text>
+                    <Button mode='outlined' onPress={handleLogout}>Sair</Button>
+                </>
+            )} />
         </Tabs.Navigator>
     )
 }

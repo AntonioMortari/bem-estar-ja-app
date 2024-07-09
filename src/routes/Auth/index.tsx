@@ -4,6 +4,7 @@ import { TAuthClienteRoutes } from '@/@types/routes/AuthRoutes';
 // telas
 import { Preload } from '@/screens/Auth/Preload';
 import { OnboardingScreen } from '@/screens/Auth/Onboarding';
+import { Login } from '@/screens/Auth/Login';
 
 const Stack = createStackNavigator<TAuthClienteRoutes>();
 
@@ -17,7 +18,7 @@ const AuthClienteRoutes = () => {
             <Stack.Screen name='Onboarding' component={OnboardingScreen} />
 
             {/* Tela para o usuário fazer login */}
-            <Stack.Screen name='Login' component={() => <></>} />
+            <Stack.Screen name='Login' component={Login} />
 
             {/* Tela para o usuário preencher informações pessoais */}
             <Stack.Screen name='Cadastro1' component={() => <></>} />

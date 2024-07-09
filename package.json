@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/montserrat": "^0.2.3",
+    "@hookform/resolvers": "^3.9.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/bottom-tabs": "^6.6.0",
     "@react-navigation/native": "^6.1.17",
@@ -19,6 +20,7 @@
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
+    "react-hook-form": "^7.52.1",
     "react-native": "0.74.3",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.16.1",
@@ -27,7 +29,8 @@
     "react-native-screens": "3.31.1",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-url-polyfill": "^2.0.0",
-    "react-native-vector-icons": "^10.1.0"
+    "react-native-vector-icons": "^10.1.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
