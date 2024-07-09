@@ -18,6 +18,21 @@ const getById = async (id: string): Promise<ICliente | null> => {
     return data;
 }
 
+const getByCPF = async (cpf: string): Promise<ICliente | string | null> => {
+    const { data, error } = await supabase
+        .from(Tabelas.clientes)
+        .select('*')
+        .eq('cpf', cpf)
+        .single<ICliente>()
+
+    if (error) {
+        console.log('ERRO AO BUSCAR DADOS DO CLIENTE POR CPF: ', error);
+        error.message;
+    }
+
+    return data;
+}
+
 const create = async (clienteData: ICliente): Promise<ICliente | string> => {
     const { data, error } = await supabase
         .from(Tabelas.clientes)
@@ -36,5 +51,6 @@ const create = async (clienteData: ICliente): Promise<ICliente | string> => {
 
 export const clienteService = {
     getById,
-    create
+    create,
+    getByCPF
 }

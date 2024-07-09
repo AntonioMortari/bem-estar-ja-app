@@ -7,6 +7,8 @@ import { ICliente, IProfissional } from '@/@types/databaseTypes';
 import { IDadosAcesso, IDadosEndereco, IDadosPessoais } from '@/@types/contexts/CadastroContext';
 import { enderecoService } from '@/services/supabase/enderecoService';
 
+import { notify } from 'react-native-notificated';
+
 const AuthContext = createContext({} as IAuthContextValues);
 
 const AuthContextProvider = ({ children }: IAuthContextProvider) => {
@@ -20,14 +22,21 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
         const result = await userService.login(email, senha);
 
         if (typeof result === 'string') {
-            // tratar erro
+            if (result === 'Invalid login credentials') {
+                notify('error', {
+                    params: {
+                        title: 'Erro',
+                        description: 'Email ou senha incorretos'
+                    }
+                })
+            }
             return;
         }
 
         // buscar os dados do cliente
         const clienteData = await clienteService.getById(result.user.id);
 
-        if (clienteData) {
+        if (clienteData != null) {
 
             // atualizar os estados de autenticação
             setIsAuth(true);
@@ -37,7 +46,14 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
             });
             setClienteData(clienteData);
         } else {
-            // tratar erro ao buscar os dados do cliente
+            // erro caso não seja possível buscar os dados do cliente
+            await handleLogout();
+            notify('error', {
+                params: {
+                    title: 'Erro',
+                    description: 'Tente novamente mais tarde'
+                }
+            });
         }
 
 
@@ -47,7 +63,11 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
         const result = await userService.logout();
 
         if (result) {
-            // tratar erro ao fazer logout
+            notify('error', {
+                params: {
+                    title: 'Ocorreu um erro inesperado',
+                }
+            });
         }
         setIsAuth(false);
         setUserData(null);
@@ -58,6 +78,10 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
     const getSessao = useCallback(async () => {
         const session = await userService.getSessao();
 
+        if (!session) {
+            await handleLogout();
+        }
+
         return session;
     }, []);
 
@@ -66,7 +90,21 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
         const result = await userService.cadastrar(dadosAcesso.email, dadosAcesso.senha);
 
         if (typeof result === 'string') {
-            // tratar erro no cadastro
+            if (result === 'User already registered') {
+                notify('warning', {
+                    params: {
+                        title: 'Erro',
+                        description: 'Usuário já cadastrado'
+                    }
+                });
+            } else {
+                notify('error', {
+                    params: {
+                        title: 'Ocorreu um erro inesperado',
+                        description: 'Tente novamente mais tarde'
+                    }
+                });
+            }
             return;
         }
 
@@ -81,14 +119,26 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
             });
 
             if (typeof clienteData === 'string') {
-                // tratar erro ao criar cliente;
+                notify('error', {
+                    params: {
+                        title: 'Ocorreu um erro inesperado',
+                        description: 'Tente novamente mais tarde'
+                    }
+                });
+                await handleLogout();
                 return;
             }
             // criar endereço
             const enderecoData = await enderecoService.create({ ...dadosEndereco, usuario_id: result.user.id });
 
             if (typeof enderecoData === 'string') {
-                // tratar erro ao criar endereço
+                notify('error', {
+                    params: {
+                        title: 'Ocorreu um erro inesperado',
+                        description: 'Tente novamente mais tarde'
+                    }
+                });
+                await handleLogout();
                 return;
             }
 
@@ -101,8 +151,14 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
             });
             setClienteData(clienteData);
             return;
-        }else{
-            // tratar erro ao fazer cadastro
+        } else {
+            notify('error', {
+                params: {
+                    title: 'Erro ao fazer cadastro',
+                    description: 'Tente novamente mais tarde'
+                }
+            });
+            await handleLogout();
         }
 
     }, []);

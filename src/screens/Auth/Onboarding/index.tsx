@@ -6,6 +6,7 @@ import { Button, Text } from 'react-native-paper';
 import { styles } from './styles';
 import { Onboarding } from '@/components/Onboarding';
 import { TAuthClienteNavigationRoutes } from '@/@types/routes/AuthRoutes';
+import { notify } from 'react-native-notificated';
 
 const OnboardingScreen = () => {
     const navigation = useNavigation<TAuthClienteNavigationRoutes>();

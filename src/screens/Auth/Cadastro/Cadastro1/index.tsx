@@ -15,6 +15,8 @@ import DatePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { useNavigation } from '@react-navigation/native';
 import { useCadastro } from '@/hooks/useCadastro';
+import { clienteService } from '@/services/supabase/clienteService';
+import { notify } from 'react-native-notificated';
 
 type TCadastro1FormData = z.infer<typeof cadastro1Schema>
 
@@ -38,7 +40,28 @@ const Cadastro1 = () => {
         setShowPicker(false);
     };
 
-    const onSubmit = (data: TCadastro1FormData) => {
+    const onSubmit = async(data: TCadastro1FormData) => {
+        const verificarCPF = await clienteService.getByCPF(data.cpf);
+
+        if(typeof verificarCPF === 'string'){
+            notify('error', {
+                params: {
+                    title: 'Ocorreu um erro inesperado',
+                    description: 'Tente novamente mais tarde'
+                }
+            });
+            return;
+        }
+
+        if(verificarCPF){
+            notify('warning', {
+                params: {
+                    title: 'Erro',
+                    description: 'CPF já cadastrado'
+                }
+            });
+            return;
+        }
         handleDadosPessoais({
             cpf: data.cpf,
             nome: data.nome,

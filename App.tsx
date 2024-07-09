@@ -18,11 +18,32 @@ import {
   useFonts
 } from '@expo-google-fonts/montserrat';
 import { CadastroContextProvider } from '@/contexts/Cadastro';
+import { createNotifications, useNotifications } from 'react-native-notificated';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AntDesign } from '@expo/vector-icons';
 
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const { NotificationsProvider } = createNotifications({
+    defaultStylesSettings: {
+      errorConfig: {
+        titleColor: theme.colors.dark,
+        titleFamily: 'Montserrat_600SemiBold',
+        descriptionFamily: 'Montserrat_400Regular',
+        accentColor: theme.colors.danger,
+        leftIconSource: <AntDesign name="exclamationcircleo" size={24} color={theme.colors.danger} />,
+      },
+      warningConfig: {
+        titleColor: theme.colors.dark,
+        titleFamily: 'Montserrat_600SemiBold',
+        descriptionFamily: 'Montserrat_400Regular',
+        accentColor: theme.colors.warning,
+        leftIconSource: <AntDesign name="warning" size={24} color={theme.colors.warning} />,
+      }
+    }
+  });
 
   const [fontsLoaded] = useFonts({
     Montserrat_400Regular,
@@ -38,15 +59,20 @@ export default function App() {
   SplashScreen.hideAsync();
 
   return (
-    <AuthContextProvider>
-      <CadastroContextProvider>
-        <PaperProvider theme={theme}>
-          <View style={styles.statusBarHeight}>
-            <Router />
-          </View>
-        </PaperProvider>
-      </CadastroContextProvider>
-    </AuthContextProvider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <NotificationsProvider>
+        <AuthContextProvider>
+          <CadastroContextProvider>
+            <PaperProvider theme={theme}>
+              <View style={styles.statusBarHeight}>
+                <Router />
+              </View>
+            </PaperProvider>
+          </CadastroContextProvider>
+        </AuthContextProvider>
+      </NotificationsProvider>
+    </GestureHandlerRootView>
+
   );
 }
 

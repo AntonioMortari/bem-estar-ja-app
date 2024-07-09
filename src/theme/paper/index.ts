@@ -54,7 +54,8 @@ const theme = {
         grayLight: '#d1d5db',
         grayDark: '#6b7280',
         star: '#FFA41C',
-        outline: '#00928C'
+        outline: '#00928C',
+        warning: '#FFD700'
     },
     fonts
 }

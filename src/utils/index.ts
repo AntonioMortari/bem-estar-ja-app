@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { notify } from 'react-native-notificated';
 
 interface IViaCepResponse {
     logradouro: string;
@@ -32,6 +33,7 @@ const getEnderecoByCEP = async (cep: string): Promise<IViaCepResponse | string> 
         return 'CEP inváido';
     }
 }
+
 
 export const utils = {
     formatCPF,
