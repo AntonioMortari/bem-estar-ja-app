@@ -17,6 +17,7 @@ import {
   Montserrat_700Bold,
   useFonts
 } from '@expo-google-fonts/montserrat';
+import { CadastroContextProvider } from '@/contexts/Cadastro';
 
 
 SplashScreen.preventAutoHideAsync();
@@ -38,11 +39,13 @@ export default function App() {
 
   return (
     <AuthContextProvider>
-      <PaperProvider theme={theme}>
-        <View style={styles.statusBarHeight}>
-          <Router />
-        </View>
-      </PaperProvider>
+      <CadastroContextProvider>
+        <PaperProvider theme={theme}>
+          <View style={styles.statusBarHeight}>
+            <Router />
+          </View>
+        </PaperProvider>
+      </CadastroContextProvider>
     </AuthContextProvider>
   );
 }
