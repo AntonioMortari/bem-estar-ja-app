@@ -7,7 +7,7 @@ const getById = async (id: string): Promise<ICliente | null> => {
         .from(Tabelas.clientes)
         .select('*')
         .eq('id', id)
-        .returns<ICliente>();
+        .single<ICliente>();
 
 
     if (error) {

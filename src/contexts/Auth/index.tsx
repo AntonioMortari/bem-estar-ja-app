@@ -34,7 +34,7 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
         }
 
         // buscar os dados do cliente
-        const clienteData = await clienteService.getById(result.user.id);
+        const clienteData = await clienteService.getById(result.user.id);   
 
         if (clienteData != null) {
 

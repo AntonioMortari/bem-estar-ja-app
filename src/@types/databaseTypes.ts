@@ -41,7 +41,40 @@ export interface IProfissional{
     agenda_id: string;
     sobre: string;
     foto_perfil: string;
+    usuario_id: string;
     outras_informacoes: any;
+}
+
+export interface IProfissionalFull extends IProfissional{
+    area_atuacao: IAreaAtuacao;
+    agenda: IAgenda;
+    endereco: IEndereco;
+}
+
+export interface IAreaAtuacao{
+    id: number;
+    nome: 'Estética' | 'Massoterapia' | 'Estética e Massoterapia'
+}
+
+export interface IAgenda{
+    id: string;
+    dia_semana: number;
+    hora_inicio: number;
+    hora_fim: number;
+}
+
+
+export interface IProcedimento{
+    id: number;
+    area_atuacao_id:number;
+    nome: string;
+    preco: number;
+    duracao: number;
+    descricao: string;
+}
+
+export interface IProcedimentoFull extends IProcedimento{
+    area_atuacao: IAreaAtuacao;
 }
 
 export interface IServicos{
@@ -50,4 +83,10 @@ export interface IServicos{
     procedimento_id: number;
     profissional_id: number;
     avaliacao: number;
+    foto: string;
+}
+export interface IServicoFull extends IServicos{
+    profissional:IProfissional;
+    procedimento: IProcedimentoFull;
+    endereco: IEndereco;
 }
