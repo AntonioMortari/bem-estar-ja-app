@@ -21,22 +21,33 @@ import { AntDesign } from '@expo/vector-icons';
 
 const Home = () => {
     const navigation = useNavigation<TAppClienteNavigationRoutes>();
-    const [servicos, setServicos] = useState<IServicoFull[]>([]);
+    const [servicosEmDestaque, setServicosEmDestaque] = useState<IServicoFull[]>([]);
     const [profissionais, setProfissionais] = useState<IProfissionalFull[]>([]);
+    const [servicosNovidades, setServicosNovidades] = useState<IServicoFull[]>([]);
     const { clienteData, handleLogout } = useAuth();
 
     useEffect(() => {
         const getData = async () => {
             // busca os dados
-            const servicosData = await servicoService.getAll()
-            if (typeof servicosData != 'string') {
-                setServicos(servicosData);
-            }
+            // const servicosData = await servicoService.getAll()
+            // if (typeof servicosData != 'string') {
+            //     setServicos(servicosData);
+            // }
 
-            const profissionaisData = await profissionalService.getAll();
-            if (typeof profissionaisData != 'string') {
-                setProfissionais(profissionaisData);
-            }
+            // const profissionaisData = await profissionalService.getAll();
+            // if (typeof profissionaisData != 'string') {
+            //     setProfissionais(profissionaisData);
+            // }
+
+            // const servicosEmDestaqueResult = await servicoService.getMelhorAvaliados('Campinas','SP');
+            // if(typeof servicosEmDestaqueResult != 'string'){
+            //     setServicosEmDestaque(servicosEmDestaqueResult);
+            // }
+
+            // const servicosNovidadesResult = await servicoService.getNovidades('Campinas', 'SP');
+            // if(typeof servicosNovidadesResult != 'string'){
+            //     setServicosNovidades(servicosNovidadesResult);
+            // }
             
         }
 
@@ -88,7 +99,7 @@ const Home = () => {
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {profissionais.map(profissional => (
-                            <ProfissionalCard onPress={() => console.log('Olá')} data={profissional} />
+                            <ProfissionalCard onPress={() => console.log('Olá')} data={profissional} key={profissional.id} />
                         ))}
                     </ScrollView>
                 </View>
@@ -101,9 +112,23 @@ const Home = () => {
                     />
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        {servicos.map(servico => (
-                            <ServicoCard data={servico} />
-                        ))}
+                        {/* {servicos.map(servico => (
+                            <ServicoCard data={servico} key={servico.id} />
+                        ))} */}
+                    </ScrollView>
+                </View>
+
+                <View>
+                    {/* Seção Serviços em Destaque */}
+                    <TituloSecao
+                        titulo='Novidades em Campinas'
+                        onPress={() => console.log('Olá')}
+                    />
+
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {/* {servicos.map(servico => (
+                            <ServicoCard data={servico} key={servico.id} />
+                        ))} */}
                     </ScrollView>
                 </View>
 

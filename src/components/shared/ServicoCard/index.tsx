@@ -37,7 +37,7 @@ const ServicoCard = ({ data }: IServicoCardProps) => {
 
                     <IconWithLabel
                     // localização
-                        label='Campinas, SP'
+                        label={`${data.endereco.cidade}, ${data.endereco.estado}`}
                         icon={<FontAwesome6 name="location-dot" size={20} color={theme.colors.primary} />}
                     />
 

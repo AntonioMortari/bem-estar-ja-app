@@ -82,6 +82,7 @@ export interface IServicos{
     created_at: Date;
     procedimento_id: number;
     profissional_id: number;
+    endereco_id: string;
     avaliacao: number;
     foto: string;
 }
