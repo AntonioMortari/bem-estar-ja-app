@@ -3,7 +3,7 @@ import { supabase } from '.';
 import { enderecoService } from './enderecoService';
 
 const joins = `procedimento:procedimento_id(*, area_atuacao:area_atuacao_id(nome)),
-                profissional:profissional_id(*),
+                profissional:profissional_id(*, area_atuacao:area_atuacao_id(nome)),
                 endereco:endereco_id(*)`; // join com a tabela de procedimento, profissional, endereço e area de atuação para filtros
 
 const getAll = async (): Promise<IServicoFull[] | string> => {
@@ -43,7 +43,7 @@ const getMelhorAvaliados = async (cidade: string, estado: string): Promise<IServ
         return error.message;
     }
 
-    if(!data[0].endereco) return []
+    if (!data[0].endereco) return []
 
     return data || [];
 }
@@ -66,13 +66,32 @@ const getNovidades = async (cidade: string, estado: string) => {
         return error.message;
     }
 
-    if(!data[0].endereco) return []
+    if (!data[0].endereco) return []
 
     return data || [];
+}
+
+const getById = async (id: number): Promise<IServicoFull | null> => {
+    const { data, error } = await supabase
+        .from(Tabelas.servicos)
+        .select(`
+                *,
+                ${joins}
+            `)
+        .eq('id', id)
+        .single<IServicoFull>();
+
+    if (error) {
+        console.log('ERRO AO BUSCAR SERVIÇO POR ID: ', error);
+        return null;
+    }
+
+    return data;
 }
 
 export const servicoService = {
     getAll,
     getMelhorAvaliados,
-    getNovidades
+    getNovidades,
+    getById
 };

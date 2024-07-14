@@ -90,7 +90,7 @@ export interface IServicos{
     foto: string;
 }
 export interface IServicoFull extends IServicos{
-    profissional:IProfissional;
+    profissional:IProfissionalFull;
     procedimento: IProcedimentoFull;
     endereco: IEndereco;
 }

@@ -10,6 +10,8 @@ import { theme } from '@/theme/paper';
 // icons
 import { FontAwesome6 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 
 
 interface IServicoCardProps {
@@ -17,6 +19,8 @@ interface IServicoCardProps {
 }
 
 const ServicoCard = ({ data }: IServicoCardProps) => {
+    const navigation = useNavigation<TAppClienteNavigationRoutes>();
+
     return (
         <Card
             elevation={3}
@@ -30,19 +34,19 @@ const ServicoCard = ({ data }: IServicoCardProps) => {
                 <View style={styles.containerIcons}>
 
                     <IconWithLabel
-                    // duração
+                        // duração
                         label={`${data.procedimento.duracao} minutos`}
                         icon={<AntDesign name="clockcircleo" size={20} color={theme.colors.primary} />}
                     />
 
                     <IconWithLabel
-                    // localização
+                        // localização
                         label={`${data.endereco.cidade}, ${data.endereco.estado}`}
                         icon={<FontAwesome6 name="location-dot" size={20} color={theme.colors.primary} />}
                     />
 
                     <IconWithLabel
-                    // nome do profissional
+                        // nome do profissional
                         label={data.profissional.nome}
                         icon={<AntDesign name="user" size={24} color={theme.colors.primary} />}
                     />
@@ -53,8 +57,8 @@ const ServicoCard = ({ data }: IServicoCardProps) => {
 
                 {/* container botões */}
                 <View style={{ marginTop: 15, flexDirection: 'row', gap: 10, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Button mode='outlined'>Detalhes</Button>
-                        <Button mode='contained'>Agendar</Button>
+                    <Button mode='outlined' onPress={() => navigation.navigate('DetalhesServico', { idServico: data.id })}>Detalhes</Button>
+                    <Button mode='contained'>Agendar</Button>
                 </View>
 
 

@@ -57,7 +57,11 @@ const theme = {
         outline: '#00928C',
         warning: '#FFD700'
     },
-    fonts
+    fonts:{
+        ...fonts,
+        semibold: 'Montserrat_600SemiBold',
+        bold: 'Montserrat_700Bold'
+    }
 }
 
 export { theme };
