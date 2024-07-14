@@ -43,6 +43,8 @@ const getMelhorAvaliados = async (cidade: string, estado: string): Promise<IServ
         return error.message;
     }
 
+    if(!data[0].endereco) return []
+
     return data || [];
 }
 
@@ -57,11 +59,14 @@ const getNovidades = async (cidade: string, estado: string) => {
         .eq('endereco.cidade', cidade)
         .eq('endereco.estado', estado)
         .gte('created_at', new Date(new Date().setMonth(new Date().getMonth() - 1)))
+        .returns<IServicoFull[]>();
 
     if (error) {
         console.log('ERRO AO BUSCAR POR NOVIDADES', error)
         return error.message;
     }
+
+    if(!data[0].endereco) return []
 
     return data || [];
 }

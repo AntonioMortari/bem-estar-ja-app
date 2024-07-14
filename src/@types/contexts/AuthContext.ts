@@ -1,6 +1,6 @@
 import { Session } from '@supabase/supabase-js';
 import { ReactNode } from 'react';
-import { ICliente, IProfissional } from '../databaseTypes';
+import { ICliente, IClienteFull, IProfissional } from '../databaseTypes';
 import { IDadosAcesso, IDadosEndereco, IDadosPessoais } from './CadastroContext';
 
 export interface IAuthContextProvider {
@@ -20,10 +20,10 @@ export interface IAuthContextValues {
     cadastrar: (dadosPessoais: IDadosPessoais, dadosEndereco: IDadosEndereco, dadosAcesso: IDadosAcesso) => void; // faz o cadastro e atualiza os estados de autenticação
 
     userData: IUserData | null; // id e access token do usuário
-    clienteData: ICliente | null; // dados específicos caso o usuário seja cliente
+    clienteData: IClienteFull | null; // dados específicos caso o usuário seja cliente
     profissionalData: IProfissional | null // dados específicos caso o usuário seja profissional
 
     setIsAuth: (data: boolean) => void; //atualiza o estado IsAuth
     setUserData: (data: IUserData) => void; // atualiza o estado userData
-    setClienteData: (data: ICliente) => void; //atualiza o estado clienteData
+    setClienteData: (data: IClienteFull) => void; //atualiza o estado clienteData
 }

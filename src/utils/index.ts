@@ -34,8 +34,21 @@ const getEnderecoByCEP = async (cep: string): Promise<IViaCepResponse | string> 
     }
 }
 
+function getSaudacao(): string {
+    const horaAtual = new Date().getHours();
+
+    if (horaAtual >= 0 && horaAtual < 12) {
+        return 'Bom dia';
+    } else if (horaAtual >= 12 && horaAtual < 18) {
+        return 'Boa tarde';
+    } else {
+        return 'Boa noite';
+    }
+}
+
 
 export const utils = {
     formatCPF,
-    getEnderecoByCEP
+    getEnderecoByCEP,
+    getSaudacao
 }

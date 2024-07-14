@@ -3,7 +3,7 @@ import { createContext, ReactNode, useCallback, useState } from 'react';
 import { userService } from '@/services/supabase/userService';
 import { clienteService } from '@/services/supabase/clienteService';
 import { IAuthContextProvider, IAuthContextValues, IUserData } from '@/@types/contexts/AuthContext';
-import { ICliente, IProfissional } from '@/@types/databaseTypes';
+import { ICliente, IClienteFull, IProfissional } from '@/@types/databaseTypes';
 import { IDadosAcesso, IDadosEndereco, IDadosPessoais } from '@/@types/contexts/CadastroContext';
 import { enderecoService } from '@/services/supabase/enderecoService';
 
@@ -15,7 +15,7 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
     const [isAuth, setIsAuth] = useState<boolean>(false);
     const [userData, setUserData] = useState<IUserData | null>(null);
 
-    const [clienteData, setClienteData] = useState<ICliente | null>(null);
+    const [clienteData, setClienteData] = useState<IClienteFull | null>(null);
     const [profissionalData, setProfissionalData] = useState<IProfissional | null>(null);
 
     const handleLogin = useCallback(async (email: string, senha: string) => {
@@ -131,7 +131,10 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
             // criar endereço
             const enderecoData = await enderecoService.create({ ...dadosEndereco, usuario_id: result.user.id });
 
-            if (typeof enderecoData === 'string') {
+            // buscar os endereços do usuário
+            const enderecos = await enderecoService.getEnderecoByUsuarioId(result.user.id);
+
+            if (typeof enderecoData === 'string' || !enderecos) {
                 notify('error', {
                     params: {
                         title: 'Ocorreu um erro inesperado',
@@ -149,7 +152,7 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
                 id: result.user.id
 
             });
-            setClienteData(clienteData);
+            setClienteData({...clienteData, enderecos});
             return;
         } else {
             notify('error', {

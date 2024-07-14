@@ -20,6 +20,9 @@ export interface ICliente{
     foto_perfil?: string;
     genero: 'F' | 'M' | 'O' 
 }
+export interface IClienteFull extends ICliente{
+    enderecos:IEndereco[]
+}
 
 export interface IEndereco{
     id: string;
