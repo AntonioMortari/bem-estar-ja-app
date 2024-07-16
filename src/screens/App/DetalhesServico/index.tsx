@@ -1,4 +1,4 @@
-import { IServicoFull } from '@/@types/databaseTypes';
+import { IAvaliacaoFull, IServicoFull } from '@/@types/databaseTypes';
 import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 import { servicoService } from '@/services/supabase/servicoService';
 import { theme } from '@/theme/paper';
@@ -16,6 +16,7 @@ import { CustomStackHeader } from '@/components/shared/CustomStackHeader';
 import { Avaliacao } from '@/components/shared/Avaliacao';
 import Stars from '@/components/shared/Stars';
 import { ServicoCard } from '@/components/shared/ServicoCard';
+import { avaliacaoService } from '@/services/supabase/avaliacaoService';
 
 
 
@@ -27,18 +28,22 @@ const DetalhesServico = ({ route }: any) => {
 
     const [servicoData, setServicoData] = useState<IServicoFull>();
     const [servicosSemelheantes, setServicosSemelheantes] = useState<IServicoFull[]>([]);
+    const [avaliacoes, setAvaliacoes] = useState<IAvaliacaoFull[]>([]);
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
     useEffect(() => {
+        // busca os dados do serviço selecionado, resgatando o id por parâmetro
         const { idServico } = route.params;
 
         if (!idServico) {
+            // se não houber id do serviço, volta para a tela anterior
             navigator.goBack();
         }
 
         const getServicoData = async () => {
+            // busca os dados do serviço por id
             setIsLoading(true);
             const result = await servicoService.getById(idServico);
             if (!result) {
@@ -58,25 +63,39 @@ const DetalhesServico = ({ route }: any) => {
         getServicoData();
     }, []);
 
-    useEffect(() => {
-        const getServicosSemelheantes = async() => {
-            if(servicoData){
-                const result = await servicoService.getServicosSemelheantes(servicoData?.procedimento.area_atuacao_id, servicoData?.endereco.cidade, servicoData?.endereco.estado);
+    // useEffect(() => {
+    //      busca serviços semelheantes, com base na área de atuação do serviço selecionado, cidade e estado
+    //     const getServicosSemelheantes = async () => {
+    //         if (servicoData) {
+    //             const result = await servicoService.getServicosSemelheantes(servicoData?.procedimento.area_atuacao_id, servicoData?.endereco.cidade, servicoData?.endereco.estado);
 
-                if(result){
-                    setServicosSemelheantes(result);
-                }
+    //             setServicosSemelheantes(result);
+    //         }
+    //     }
+
+    //     getServicosSemelheantes();
+    // }, [servicoData]);
+
+    useEffect(() => {
+        // busca as avaliações pelo id do serviço
+        const getAvaliacoes = async () => {
+            if (servicoData) {
+                const result = await avaliacaoService.getByServicoId(servicoData.id);
+                setAvaliacoes(result);
             }
         }
 
-        getServicosSemelheantes();
-    }, [])
+        getAvaliacoes();
+    }, [servicoData]);
 
     const handleNavigatePerfilProfissional = () => {
+        // navega para o perfil do profissional
         if (servicoData?.profissional.id) {
             navigator.navigate('PerfilProfissional', { idProfissional: servicoData?.profissional.id });
         }
     }
+
+    console.log(servicosSemelheantes);
 
     return (
         <>
@@ -87,7 +106,10 @@ const DetalhesServico = ({ route }: any) => {
             ) : (
                 <>
                     <ScrollView showsVerticalScrollIndicator={false}>
-                        <CustomStackHeader />
+                        <CustomStackHeader
+                            isFavorito
+                        />
+
                         <View style={styles.containerImage}>
                             <ImageBackground
                                 style={styles.image}
@@ -156,36 +178,43 @@ const DetalhesServico = ({ route }: any) => {
                                 <Button onPress={handleNavigatePerfilProfissional} style={styles.botaoVerPerfil} mode='contained'>Ver Perfil</Button>
                             </View>
 
-                            <View style={styles.secao}>
-                                <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Avaliações dos clientes</Text>
+                            {avaliacoes.length > 0 && (
+                                <View style={styles.secao}>
+                                    <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Avaliações dos clientes</Text>
                                     <Stars stars={servicoData?.avaliacao || 0} showNumber />
+                                    <View>
 
-                                <View>
-
-                                    <View style={styles.containerAvaliacoes}>
-                                        <Avaliacao
-                                            clienteData={{ nome: 'Antonio Mortari', nota: 3.3, data: new Date(), avaliacao: 'Minha experiência com a limpeza de pele foi incrível! A esteticista foi muito gentil e profissional. Ela explicou todo o processo detalhadamente e me deixou confortável desde o início. A limpeza de pele foi muito eficaz, deixando minha pele mais limpa, suave e radiante.' }}
-                                        />
-                                        <Avaliacao
-                                            clienteData={{ nome: 'Antonio Mortari', nota: 5, data: new Date(), avaliacao: 'Minha experiência com a limpeza de pele foi incrível! A esteticista foi muito gentil e profissional. Ela explicou todo o processo detalhadamente e me deixou confortável desde o início. A limpeza de pele foi muito eficaz, deixando minha pele mais limpa, suave e radiante.' }}
-                                        />
-                                        <Avaliacao
-                                            clienteData={{ nome: 'Antonio Mortari', nota: 5, data: new Date(), avaliacao: 'Minha experiência com a limpeza de pele foi incrível! A esteticista foi muito gentil e profissional. Ela explicou todo o processo detalhadamente e me deixou confortável desde o início. A limpeza de pele foi muito eficaz, deixando minha pele mais limpa, suave e radiante.' }}
-                                        />
+                                        <View style={styles.containerAvaliacoes}>
+                                            {avaliacoes.map(avaliacaoData => (
+                                                <Avaliacao
+                                                    clienteData={{
+                                                        nome: avaliacaoData.cliente.nome,
+                                                        foto: avaliacaoData.cliente.foto_perfil
+                                                    }}
+                                                    data={avaliacaoData.created_at}
+                                                    avaliacao={avaliacaoData.avaliacao}
+                                                    nota={avaliacaoData.nota}
+                                                />
+                                            ))}
+                                        </View>
                                     </View>
+
                                 </View>
+                            )}
 
-                            </View>
+                            {/* <View style={styles.secao}>
+                                <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Serviços Semelheantes</Text>
 
-                            <View style={styles.secao}>
-                                {servicosSemelheantes.length > 0 && (
-                                    servicosSemelheantes.map(servico => {
-                                        return(
-                                            <ServicoCard data={servico} key={servico.id} />
-                                        )
-                                    })
-                                )}
-                            </View>
+                                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                    {servicosSemelheantes.map(servico => (
+                                        <ServicoCard
+                                            data={servico}
+                                            key={servico.id}
+                                        />
+                                    ))}
+                                </ScrollView>
+                            </View> */}
+
 
                         </View>
                     </ScrollView>

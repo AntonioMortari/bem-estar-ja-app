@@ -8,14 +8,27 @@ import { useNavigation } from '@react-navigation/native';
 import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 import { theme } from '@/theme/paper';
 
+interface ICustomHeaderProps {
+    isFavorito: boolean;
+}
 
-const CustomStackHeader = () => {
+const CustomStackHeader = ({ isFavorito }: ICustomHeaderProps) => {
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
 
     return (
         <View style={styles.header}>
-            <TouchableRipple onPress={() => navigator.goBack()} style={styles.back}>
+            <TouchableRipple onPress={() => navigator.goBack()} style={styles.button}>
                 <AntDesign name="arrowleft" size={30} color={theme.colors.dark} />
+            </TouchableRipple>
+
+            <TouchableRipple onPress={() => navigator.goBack()} style={styles.button}>
+                {isFavorito ? (
+                    <AntDesign name="heart" size={30} color={theme.colors.heart} />
+
+                ) : (
+                    <AntDesign name="hearto" size={30} color={theme.colors.heart} />
+
+                )}
             </TouchableRipple>
         </View>
     );

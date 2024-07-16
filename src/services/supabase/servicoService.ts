@@ -1,6 +1,5 @@
 import { IServicoFull, Tabelas } from '@/@types/databaseTypes';
 import { supabase } from '.';
-import { enderecoService } from './enderecoService';
 
 const joins = `procedimento:procedimento_id(*, area_atuacao:area_atuacao_id(nome)),
                 profissional:profissional_id(*, area_atuacao:area_atuacao_id(nome)),
@@ -95,19 +94,18 @@ const getServicosSemelheantes = async (areaAtuacaoId: number, cidade: string, es
         .select(`*,
                 ${joins}
             `)
-        .eq('procedimento.area_atuacao_id', areaAtuacaoId)
+        .eq('procedimento.area_atuacao_id',areaAtuacaoId)
         .eq('endereco.cidade', cidade)
         .eq('endereco.estado', estado)
         .returns<IServicoFull[]>();
 
     if (error) {
-        console.log('ERRO AO BUSCAR SERVIÇOS SEMELHEANTES: ', error);
+        console.log('ERRO AO BUSCAR SERVIÇOS SEMELHANTES: ', error);
         return [];
     }
 
-    console.log(data[0]);
-
-    if(!data[0].procedimento.area_atuacao || !data[0].endereco) return [];
+    // Check if data[0] or its nested properties exist before returning
+    if (!data[0]?.procedimento?.area_atuacao || !data[0]?.endereco) return [];
 
     return data;
 }

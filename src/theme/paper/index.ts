@@ -55,7 +55,8 @@ const theme = {
         grayDark: '#6b7280',
         star: '#FFA41C',
         outline: '#00928C',
-        warning: '#FFD700'
+        warning: '#FFD700',
+        heart: '#FF003D'
     },
     fonts:{
         ...fonts,

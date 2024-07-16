@@ -94,3 +94,21 @@ export interface IServicoFull extends IServicos{
     procedimento: IProcedimentoFull;
     endereco: IEndereco;
 }
+
+export interface IAvaliacao{
+    id: string;
+    cliente_id: string;
+    avaliacao: string;
+    nota: number;
+    servico_id: string;
+    created_at: Date;
+}
+
+export interface IAvaliacaoFull{
+    id: string;
+    cliente: ICliente;
+    avaliacao: string;
+    nota: number;
+    servico_id: string;
+    created_at: Date;
+}
