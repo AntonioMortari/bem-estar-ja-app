@@ -66,7 +66,7 @@ const getNovidades = async (cidade: string, estado: string) => {
         return error.message;
     }
 
-    if (!data[0].endereco) return []
+    if (!data[0].endereco) return [];
 
     return data || [];
 }
@@ -89,9 +89,33 @@ const getById = async (id: number): Promise<IServicoFull | null> => {
     return data;
 }
 
+const getServicosSemelheantes = async (areaAtuacaoId: number, cidade: string, estado: string): Promise<IServicoFull[]> => {
+    const { data, error } = await supabase
+        .from(Tabelas.servicos)
+        .select(`*,
+                ${joins}
+            `)
+        .eq('procedimento.area_atuacao_id', areaAtuacaoId)
+        .eq('endereco.cidade', cidade)
+        .eq('endereco.estado', estado)
+        .returns<IServicoFull[]>();
+
+    if (error) {
+        console.log('ERRO AO BUSCAR SERVIÇOS SEMELHEANTES: ', error);
+        return [];
+    }
+
+    console.log(data[0]);
+
+    if(!data[0].procedimento.area_atuacao || !data[0].endereco) return [];
+
+    return data;
+}
+
 export const servicoService = {
     getAll,
     getMelhorAvaliados,
     getNovidades,
-    getById
+    getById,
+    getServicosSemelheantes
 };

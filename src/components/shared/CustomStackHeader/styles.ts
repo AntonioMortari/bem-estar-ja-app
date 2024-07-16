@@ -1,4 +1,3 @@
-import { theme } from '@/theme/paper';
 import { StyleSheet } from 'react-native';
 
 

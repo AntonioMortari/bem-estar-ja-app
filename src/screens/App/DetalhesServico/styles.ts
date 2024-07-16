@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         gap: 30
     },
     descricao:{
-        color: theme.colors.gray
+        color: theme.colors.grayDark
     },
     secao:{
         gap: 10
@@ -49,6 +49,9 @@ const styles = StyleSheet.create({
     },
     botaoVerPerfil:{
         width: '40%'
+    },
+    containerAvaliacoes:{
+        gap: 15
     },
     footer:{
         flexDirection: 'row',

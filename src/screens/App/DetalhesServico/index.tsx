@@ -12,8 +12,10 @@ import { IconWithLabel } from '@/components/shared/IconLabel';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
-import AvatarImage from 'react-native-paper/lib/typescript/components/Avatar/AvatarImage';
 import { CustomStackHeader } from '@/components/shared/CustomStackHeader';
+import { Avaliacao } from '@/components/shared/Avaliacao';
+import Stars from '@/components/shared/Stars';
+import { ServicoCard } from '@/components/shared/ServicoCard';
 
 
 
@@ -22,7 +24,10 @@ import { CustomStackHeader } from '@/components/shared/CustomStackHeader';
 const DetalhesServico = ({ route }: any) => {
 
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
+
     const [servicoData, setServicoData] = useState<IServicoFull>();
+    const [servicosSemelheantes, setServicosSemelheantes] = useState<IServicoFull[]>([]);
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
@@ -53,6 +58,20 @@ const DetalhesServico = ({ route }: any) => {
         getServicoData();
     }, []);
 
+    useEffect(() => {
+        const getServicosSemelheantes = async() => {
+            if(servicoData){
+                const result = await servicoService.getServicosSemelheantes(servicoData?.procedimento.area_atuacao_id, servicoData?.endereco.cidade, servicoData?.endereco.estado);
+
+                if(result){
+                    setServicosSemelheantes(result);
+                }
+            }
+        }
+
+        getServicosSemelheantes();
+    }, [])
+
     const handleNavigatePerfilProfissional = () => {
         if (servicoData?.profissional.id) {
             navigator.navigate('PerfilProfissional', { idProfissional: servicoData?.profissional.id });
@@ -67,7 +86,7 @@ const DetalhesServico = ({ route }: any) => {
                 </View>
             ) : (
                 <>
-                    <ScrollView>
+                    <ScrollView showsVerticalScrollIndicator={false}>
                         <CustomStackHeader />
                         <View style={styles.containerImage}>
                             <ImageBackground
@@ -136,6 +155,38 @@ const DetalhesServico = ({ route }: any) => {
 
                                 <Button onPress={handleNavigatePerfilProfissional} style={styles.botaoVerPerfil} mode='contained'>Ver Perfil</Button>
                             </View>
+
+                            <View style={styles.secao}>
+                                <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Avaliações dos clientes</Text>
+                                    <Stars stars={servicoData?.avaliacao || 0} showNumber />
+
+                                <View>
+
+                                    <View style={styles.containerAvaliacoes}>
+                                        <Avaliacao
+                                            clienteData={{ nome: 'Antonio Mortari', nota: 3.3, data: new Date(), avaliacao: 'Minha experiência com a limpeza de pele foi incrível! A esteticista foi muito gentil e profissional. Ela explicou todo o processo detalhadamente e me deixou confortável desde o início. A limpeza de pele foi muito eficaz, deixando minha pele mais limpa, suave e radiante.' }}
+                                        />
+                                        <Avaliacao
+                                            clienteData={{ nome: 'Antonio Mortari', nota: 5, data: new Date(), avaliacao: 'Minha experiência com a limpeza de pele foi incrível! A esteticista foi muito gentil e profissional. Ela explicou todo o processo detalhadamente e me deixou confortável desde o início. A limpeza de pele foi muito eficaz, deixando minha pele mais limpa, suave e radiante.' }}
+                                        />
+                                        <Avaliacao
+                                            clienteData={{ nome: 'Antonio Mortari', nota: 5, data: new Date(), avaliacao: 'Minha experiência com a limpeza de pele foi incrível! A esteticista foi muito gentil e profissional. Ela explicou todo o processo detalhadamente e me deixou confortável desde o início. A limpeza de pele foi muito eficaz, deixando minha pele mais limpa, suave e radiante.' }}
+                                        />
+                                    </View>
+                                </View>
+
+                            </View>
+
+                            <View style={styles.secao}>
+                                {servicosSemelheantes.length > 0 && (
+                                    servicosSemelheantes.map(servico => {
+                                        return(
+                                            <ServicoCard data={servico} key={servico.id} />
+                                        )
+                                    })
+                                )}
+                            </View>
+
                         </View>
                     </ScrollView>
 
