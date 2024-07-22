@@ -1,7 +1,7 @@
 import { IServicoFull, Tabelas } from '@/@types/databaseTypes';
 import { supabase } from '.';
 
-const joins = `procedimento:procedimento_id(*, area_atuacao:area_atuacao_id(nome)),
+const joins = `procedimento:procedimento_id(*, area_atuacao:area_atuacao_id(id, nome)),
                 profissional:profissional_id(*, area_atuacao:area_atuacao_id(nome)),
                 endereco:endereco_id(*)`; // join com a tabela de procedimento, profissional, endereço e area de atuação para filtros
 
@@ -104,10 +104,10 @@ const getServicosSemelheantes = async (areaAtuacaoId: number, cidade: string, es
         return [];
     }
 
-    // Check if data[0] or its nested properties exist before returning
-    if (!data[0]?.procedimento?.area_atuacao || !data[0]?.endereco) return [];
+    const result = data.filter(servico => servico.procedimento != undefined && servico.profissional != undefined);
 
-    return data;
+
+    return result || [];
 }
 
 export const servicoService = {

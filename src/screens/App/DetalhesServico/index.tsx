@@ -17,12 +17,15 @@ import { Avaliacao } from '@/components/shared/Avaliacao';
 import Stars from '@/components/shared/Stars';
 import { ServicoCard } from '@/components/shared/ServicoCard';
 import { avaliacaoService } from '@/services/supabase/avaliacaoService';
+import { favoritoService } from '@/services/supabase/favoritoService';
+import { useAuth } from '@/hooks/useAuth';
 
 
 
 
 
 const DetalhesServico = ({ route }: any) => {
+    const { clienteData } = useAuth();
 
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
 
@@ -30,7 +33,9 @@ const DetalhesServico = ({ route }: any) => {
     const [servicosSemelheantes, setServicosSemelheantes] = useState<IServicoFull[]>([]);
     const [avaliacoes, setAvaliacoes] = useState<IAvaliacaoFull[]>([]);
 
+    const [isFavorito, setIsFavorito] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [atualizarIsFavorito, setAtualizarIsFavorito] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -38,7 +43,7 @@ const DetalhesServico = ({ route }: any) => {
         const { idServico } = route.params;
 
         if (!idServico) {
-            // se não houber id do serviço, volta para a tela anterior
+            // se não houver id do serviço, volta para a tela anterior
             navigator.goBack();
         }
 
@@ -63,21 +68,23 @@ const DetalhesServico = ({ route }: any) => {
         getServicoData();
     }, []);
 
-    // useEffect(() => {
-    //      busca serviços semelheantes, com base na área de atuação do serviço selecionado, cidade e estado
-    //     const getServicosSemelheantes = async () => {
-    //         if (servicoData) {
-    //             const result = await servicoService.getServicosSemelheantes(servicoData?.procedimento.area_atuacao_id, servicoData?.endereco.cidade, servicoData?.endereco.estado);
+    useEffect(() => {
+        setIsLoading(true);
+        //busca serviços semelheantes, com base na área de atuação do serviço selecionado, cidade e estado
+        const getServicosSemelheantes = async () => {
+            if (servicoData) {
+                const result = await servicoService.getServicosSemelheantes(servicoData?.procedimento.area_atuacao_id, servicoData?.endereco.cidade, servicoData?.endereco.estado);
 
-    //             setServicosSemelheantes(result);
-    //         }
-    //     }
+                setServicosSemelheantes(result);
+                setIsLoading(false);
+            }
+        }
 
-    //     getServicosSemelheantes();
-    // }, [servicoData]);
+        getServicosSemelheantes();
+    }, [servicoData]);
 
     useEffect(() => {
-        // busca as avaliações pelo id do serviço
+        // busca as 3 últimas avaliações pelo id do serviço
         const getAvaliacoes = async () => {
             if (servicoData) {
                 const result = await avaliacaoService.getByServicoId(servicoData.id);
@@ -88,6 +95,34 @@ const DetalhesServico = ({ route }: any) => {
         getAvaliacoes();
     }, [servicoData]);
 
+    useEffect(() => {
+        const checkIsFavorito = async () => {
+            if (clienteData && servicoData) {
+                const result = await favoritoService.checkServicoIsFavorito(clienteData.id, servicoData.id);
+
+                setIsFavorito(result);
+            }
+        }
+
+        checkIsFavorito();
+    }, [clienteData, servicoData, atualizarIsFavorito]);
+
+    const addServicoFavoritos = async () => {
+        if (clienteData && servicoData) {
+            const result = await favoritoService.adicionarServicoFavorito(clienteData.id, servicoData.id);
+
+            setAtualizarIsFavorito(!atualizarIsFavorito);
+        }
+    }
+
+    const removerServicoFavoritos = async () => {
+        if (clienteData && servicoData) {
+            const result = await favoritoService.removerServicoFavorito(clienteData.id, servicoData.id);
+
+            setAtualizarIsFavorito(!atualizarIsFavorito);
+        }
+    }
+
     const handleNavigatePerfilProfissional = () => {
         // navega para o perfil do profissional
         if (servicoData?.profissional.id) {
@@ -95,7 +130,6 @@ const DetalhesServico = ({ route }: any) => {
         }
     }
 
-    console.log(servicosSemelheantes);
 
     return (
         <>
@@ -107,7 +141,14 @@ const DetalhesServico = ({ route }: any) => {
                 <>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <CustomStackHeader
-                            isFavorito
+                            isFavorito={isFavorito}
+                            onPress={() => {
+                                if (isFavorito) {
+                                    removerServicoFavoritos();
+                                } else {
+                                    addServicoFavoritos();
+                                }
+                            }}
                         />
 
                         <View style={styles.containerImage}>
@@ -178,6 +219,7 @@ const DetalhesServico = ({ route }: any) => {
                                 <Button onPress={handleNavigatePerfilProfissional} style={styles.botaoVerPerfil} mode='contained'>Ver Perfil</Button>
                             </View>
 
+
                             {avaliacoes.length > 0 && (
                                 <View style={styles.secao}>
                                     <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Avaliações dos clientes</Text>
@@ -202,18 +244,24 @@ const DetalhesServico = ({ route }: any) => {
                                 </View>
                             )}
 
-                            {/* <View style={styles.secao}>
-                                <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Serviços Semelheantes</Text>
+                            {servicosSemelheantes.length > 0 && (
+                                <View style={styles.secao}>
+                                    <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Serviços Semelheantes</Text>
 
-                                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                    {servicosSemelheantes.map(servico => (
-                                        <ServicoCard
-                                            data={servico}
-                                            key={servico.id}
-                                        />
-                                    ))}
-                                </ScrollView>
-                            </View> */}
+                                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                        {servicosSemelheantes.map(servico => {
+                                            if (servico.id != servicoData?.id) {
+                                                return <ServicoCard
+                                                    data={servico}
+                                                    key={servico.id}
+                                                />
+                                            }
+
+
+                                        })}
+                                    </ScrollView>
+                                </View>
+                            )}
 
 
                         </View>

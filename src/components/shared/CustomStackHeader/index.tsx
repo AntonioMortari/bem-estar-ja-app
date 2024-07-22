@@ -10,9 +10,10 @@ import { theme } from '@/theme/paper';
 
 interface ICustomHeaderProps {
     isFavorito: boolean;
+    onPress: () => void;
 }
 
-const CustomStackHeader = ({ isFavorito }: ICustomHeaderProps) => {
+const CustomStackHeader = ({ isFavorito, onPress }: ICustomHeaderProps) => {
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
 
     return (
@@ -21,7 +22,7 @@ const CustomStackHeader = ({ isFavorito }: ICustomHeaderProps) => {
                 <AntDesign name="arrowleft" size={30} color={theme.colors.dark} />
             </TouchableRipple>
 
-            <TouchableRipple onPress={() => navigator.goBack()} style={styles.button}>
+            <TouchableRipple onPress={onPress} style={styles.button}>
                 {isFavorito ? (
                     <AntDesign name="heart" size={30} color={theme.colors.heart} />
 

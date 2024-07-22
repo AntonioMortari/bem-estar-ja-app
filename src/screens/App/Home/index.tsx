@@ -193,7 +193,7 @@ const Home = () => {
             </View>
 
             {isLoading ? (
-                <View style={{marginTop: 50, alignItems: 'center', justifyContent: 'center'}}>
+                <View style={{ marginTop: 50, alignItems: 'center', justifyContent: 'center' }}>
                     <ActivityIndicator color={theme.colors.primary} animating />
                 </View>
             ) : (
@@ -215,7 +215,7 @@ const Home = () => {
 
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                                         {profissionais.map(profissional => (
-                                            <ProfissionalCard onPress={() => console.log('Olá')} data={profissional} key={profissional.id} />
+                                            <ProfissionalCard onPress={() => navigation.navigate('PerfilProfissional', { idProfissional: profissional.id })} data={profissional} key={profissional.id} />
                                         ))}
                                     </ScrollView>
                                 </View>

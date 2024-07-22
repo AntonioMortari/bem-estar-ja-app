@@ -9,6 +9,7 @@ import { theme } from '@/theme/paper';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import Stars from '../Stars';
 
 
 interface IProfissionalCardProps {
@@ -46,14 +47,10 @@ const ProfissionalCard = ({ data, onPress }: IProfissionalCardProps) => {
                         icon={<MaterialIcons name="work" size={24} color={theme.colors.primary} />}
                     />
 
-                    <View style={{ flexDirection: 'row', gap: 1, alignItems: 'center' }}>
-                        {/* Estrelas com base em avaliação */}
-                        {['', '', '', '', ''].map(() => (
-                            <AntDesign name="star" size={20} color={theme.colors.star} />
-                        ))}
-
-                        <Text variant='bodyMedium' style={{ marginLeft: 10 }}>5,0</Text>
-                    </View>
+                    <Stars
+                        showNumber
+                        stars={4.5}
+                    />
                 </View>
 
                 <View style={{ marginTop: 15 }}>

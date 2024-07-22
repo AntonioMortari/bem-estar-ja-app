@@ -16,7 +16,7 @@ const AppClienteRoutes = () => {
     return (
         <Stack.Navigator initialRouteName='MainTabs'>
             <Stack.Screen name='MainTabs' component={MainTabs} options={{ headerShown: false }} />
-            <Stack.Screen name='PerfilProfissional' component={PerfilProfissional} options={{headerMode: 'screen'}} />
+            <Stack.Screen name='PerfilProfissional' component={PerfilProfissional} options={{headerMode: 'screen', headerShown: false}} />
             <Stack.Screen name='DetalhesServico' component={DetalhesServico} options={{headerShown: false}} />
         </Stack.Navigator>
     )

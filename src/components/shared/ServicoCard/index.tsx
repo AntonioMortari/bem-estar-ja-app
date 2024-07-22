@@ -28,32 +28,32 @@ const ServicoCard = ({ data }: IServicoCardProps) => {
         >
             <Card.Cover style={styles.cover} src={data.foto} />
 
-            <Card.Title title={data.procedimento.nome} titleVariant='titleMedium' />
+            <Card.Title title={data.procedimento?.nome} titleVariant='titleMedium' />
             <Card.Content>
 
                 <View style={styles.containerIcons}>
 
                     <IconWithLabel
                         // duração
-                        label={`${data.procedimento.duracao} minutos`}
+                        label={`${data.procedimento?.duracao} minutos`}
                         icon={<AntDesign name="clockcircleo" size={20} color={theme.colors.primary} />}
                     />
 
                     <IconWithLabel
                         // localização
-                        label={`${data.endereco.cidade}, ${data.endereco.estado}`}
+                        label={`${data.endereco?.cidade}, ${data.endereco?.estado}`}
                         icon={<FontAwesome6 name="location-dot" size={20} color={theme.colors.primary} />}
                     />
 
                     <IconWithLabel
                         // nome do profissional
-                        label={data.profissional.nome}
+                        label={data.profissional?.nome}
                         icon={<AntDesign name="user" size={24} color={theme.colors.primary} />}
                     />
                 </View>
 
                 {/* Preço */}
-                <Text variant='titleLarge' style={{ marginTop: 10 }}>R${data.procedimento.preco}</Text>
+                <Text variant='titleLarge' style={{ marginTop: 10 }}>R${data.procedimento?.preco}</Text>
 
                 {/* container botões */}
                 <View style={{ marginTop: 15, flexDirection: 'row', gap: 10, width: '100%', alignItems: 'center', justifyContent: 'center' }}>

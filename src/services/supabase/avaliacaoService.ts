@@ -10,6 +10,7 @@ const getByServicoId = async (servicoId: number): Promise<IAvaliacaoFull[]> => {
                 cliente:cliente_id(*)
             `)
         .eq('servico_id', servicoId)
+        .limit(3)
         .returns<IAvaliacaoFull[]>();
 
     if(error){

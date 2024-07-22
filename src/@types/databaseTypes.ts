@@ -9,7 +9,8 @@ export enum Tabelas{
     enderecos = 'enderecos',
     procedimentos = 'procedimentos',
     profissionais = 'profissionais',
-    servicos = 'servicos'
+    servicos = 'servicos',
+    favoritos = 'favoritos'
 }
 
 export interface ICliente{
@@ -111,4 +112,13 @@ export interface IAvaliacaoFull{
     nota: number;
     servico_id: string;
     created_at: Date;
+}
+
+export interface IFavorito{
+    id?: string;
+    usuario_id: string;
+    tipo_favorito_id: 1 | 2;
+    servico_id?: number;
+    profissional_id?: number;
+
 }
