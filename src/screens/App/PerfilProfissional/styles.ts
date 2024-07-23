@@ -4,7 +4,6 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container:{
-
     },
     containerImage:{
         height: 220
@@ -14,6 +13,9 @@ const styles = StyleSheet.create({
     },
     titulo:{
         fontFamily: theme.fonts.semibold
+    },
+    subtitulo:{
+        color: theme.colors.gray  
     },
     conteudo:{
         padding: 15,
@@ -28,6 +30,26 @@ const styles = StyleSheet.create({
     containerIcons:{
         gap: 10
     },
+    sobre:{
+        color: theme.colors.grayDark,
+        textAlign: 'justify'  
+    },
+    header:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 20
+    },
+    containerInformacoes:{
+        gap: 30,
+        marginTop: 30
+    },
+    containerServicos:{
+
+    },
+    mapa:{
+        
+    }
 })
 
 export { styles };
