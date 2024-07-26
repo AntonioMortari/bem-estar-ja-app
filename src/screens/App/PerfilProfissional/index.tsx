@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ImageBackground, ScrollView, View } from 'react-native';
 
 
-import { IProfissionalFull } from '@/@types/databaseTypes';
+import { IProfissionalFull, IServicoFull } from '@/@types/databaseTypes';
 import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 import { profissionalService } from '@/services/supabase/profissionalService';
 import { CustomStackHeader } from '@/components/shared/CustomStackHeader';
@@ -14,9 +14,12 @@ import { styles } from './styles';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { ActivityIndicator, Avatar, List, SegmentedButtons, Text } from 'react-native-paper';
+import { CustomListItem } from '@/components/shared/CustomListItem';
+import { servicoService } from '@/services/supabase/servicoService';
 
 const PerfilProfissional = ({ route }: any) => {
     const [profissionalData, setProfissionalData] = useState<IProfissionalFull>();
+    const [servicosProfissional, setServicosProfissional] = useState<IServicoFull[]>([]);
 
     const [isFavorito, setIsFavorito] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -29,9 +32,9 @@ const PerfilProfissional = ({ route }: any) => {
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
 
     useEffect(() => {
+        const { idProfissional } = route.params;
         const getProfissionalData = async () => {
             setIsLoading(true);
-            const { idProfissional } = route.params;
 
             if (!idProfissional) {
                 navigator.goBack();
@@ -48,7 +51,15 @@ const PerfilProfissional = ({ route }: any) => {
             setIsLoading(false);
         }
 
+        const getServicosProfissional = async () => {
+            setIsLoading(true);
+            const result = await servicoService.getByProfissionalId(idProfissional);
+
+            setServicosProfissional(result);
+        }
+
         getProfissionalData();
+        getServicosProfissional();
     }, []);
 
     useEffect(() => {
@@ -82,9 +93,9 @@ const PerfilProfissional = ({ route }: any) => {
     return (
         <>
             {isLoading ? (
-                <>
+                <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
                     <ActivityIndicator color={theme.colors.primary} animating />
-                </>
+                </View>
             ) : (
                 <ScrollView style={styles.container}>
 
@@ -178,7 +189,29 @@ const PerfilProfissional = ({ route }: any) => {
 
                                 </View> */}
 
+                                {profissionalData?.outras_informacoes && (
+                                    <View style={[styles.secao, { paddingBottom: 40 }]}>
+                                        <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Outras informações</Text>
+
+                                        {Object.keys(profissionalData.outras_informacoes).map(info => {
+                                            if (info === 'atende_homecare') {
+                                                return (
+                                                    <CustomListItem text='Atendimento Domiciliar' />
+                                                )
+                                            }
+
+                                            if (info === 'cnpj') {
+                                                return (
+                                                    <CustomListItem text={`CNPJ: ${profissionalData.outras_informacoes[info]}`} />
+                                                )
+                                            }
+                                        })}
+
+                                    </View>
+                                )}
+
                             </View>
+
 
                         ) : (
                             <View style={styles.containerServicos}>

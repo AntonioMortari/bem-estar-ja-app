@@ -6,10 +6,10 @@ const styles = StyleSheet.create({
     container:{
     },
     containerImage:{
-        height: 220
+        height: 220,
     },
     image:{
-        height: '100%'
+        height: '100%',
     },
     titulo:{
         fontFamily: theme.fonts.semibold

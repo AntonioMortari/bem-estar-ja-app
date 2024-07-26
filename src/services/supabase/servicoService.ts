@@ -94,7 +94,7 @@ const getServicosSemelheantes = async (areaAtuacaoId: number, cidade: string, es
         .select(`*,
                 ${joins}
             `)
-        .eq('procedimento.area_atuacao_id',areaAtuacaoId)
+        .eq('procedimento.area_atuacao_id', areaAtuacaoId)
         .eq('endereco.cidade', cidade)
         .eq('endereco.estado', estado)
         .returns<IServicoFull[]>();
@@ -110,10 +110,31 @@ const getServicosSemelheantes = async (areaAtuacaoId: number, cidade: string, es
     return result || [];
 }
 
+const getByProfissionalId = async (profissionalId: number): Promise<IServicoFull[]> => {
+    const { data, error } = await supabase
+        .from(Tabelas.servicos)
+        .select(`
+            *,
+            ${joins}
+            `)
+        .eq('profissional_id', profissionalId)
+        .returns<IServicoFull[]>();
+
+    if (error) {
+        console.log('ERRO AO BUSCAR SERVIÇOS POR ID DO PROFISSIONAL: ', error);
+        return [];
+    }
+
+    const result = data.filter(servico => servico.profissional != undefined);
+
+    return result || [];
+}
+
 export const servicoService = {
     getAll,
     getMelhorAvaliados,
     getNovidades,
     getById,
-    getServicosSemelheantes
+    getServicosSemelheantes,
+    getByProfissionalId
 };
