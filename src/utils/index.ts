@@ -23,7 +23,7 @@ const getEnderecoByCEP = async (cep: string): Promise<IViaCepResponse | string> 
     try {
         const response = await axios.get(url);
 
-        if(response.data.erro){
+        if (response.data.erro) {
             return 'CEP inválido';
         }
 
@@ -46,9 +46,31 @@ function getSaudacao(): string {
     }
 }
 
+const getDiaSemanaByNumero = (dia: number) => {
+    switch (dia) {
+        case 0:
+            return 'Domingo'
+        case 1:
+            return 'Segunda-Feira'
+        case 2:
+            return 'Terça-Feira'
+        case 3:
+            return 'Quarta-Feira'
+        case 4:
+            return 'Quinta-Feira'
+        case 5:
+            return 'Sexta-Feira'
+        case 6:
+            return 'Sábado'
+        default:
+            break;
+    }
+}
+
 
 export const utils = {
     formatCPF,
     getEnderecoByCEP,
-    getSaudacao
+    getSaudacao,
+    getDiaSemanaByNumero
 }

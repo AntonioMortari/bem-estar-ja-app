@@ -51,7 +51,6 @@ export interface IProfissional{
 
 export interface IProfissionalFull extends IProfissional{
     area_atuacao: IAreaAtuacao;
-    agenda: IAgenda;
     endereco: IEndereco;
 }
 
@@ -59,14 +58,6 @@ export interface IAreaAtuacao{
     id: number;
     nome: 'Estética' | 'Massoterapia' | 'Estética e Massoterapia'
 }
-
-export interface IAgenda{
-    id: string;
-    dia_semana: number;
-    hora_inicio: number;
-    hora_fim: number;
-}
-
 
 export interface IProcedimento{
     id: number;
@@ -121,4 +112,18 @@ export interface IFavorito{
     servico_id?: number;
     profissional_id?: number;
 
+}
+
+export interface IFotosProfissionais{
+    id: number;
+    usuario_id: string;
+    foto: string;
+}
+
+export interface IAgenda {
+    id: string;
+    profissional_id: number;
+    dia_semana: number;
+    hora_inicio: string;
+    hora_fim: string;
 }

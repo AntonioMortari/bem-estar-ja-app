@@ -47,10 +47,10 @@ const ServicoCardHorizontal = ({ data }: IServicoCardHorizontalProps) => {
                         />
                     </View>
 
-                    <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center' }}>
-                        <Button style={{transform: [{scale: .8}]}} mode='outlined' onPress={() => navigation.navigate('DetalhesServico', { idServico: data.id })}>Detalhes</Button>
-                        <Button style={{transform: [{scale: .8}]}} mode='contained'>Agendar</Button>
+                    <View style={{ marginTop: 5, flexDirection: 'row', gap: 10, width: '100%'}}>
+                        <Button style={{transform: [{scale: .9}], width: '70%'}} mode='contained' onPress={() => navigation.navigate('DetalhesServico', { idServico: data.id })}>Agendar</Button>
                     </View>
+
                 </View>
             </View>
         </TouchableRipple>

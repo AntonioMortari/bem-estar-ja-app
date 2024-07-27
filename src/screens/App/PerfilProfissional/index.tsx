@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ImageBackground, ScrollView, View } from 'react-native';
 
 
-import { IProfissionalFull, IServicoFull } from '@/@types/databaseTypes';
+import { IAgenda, IProfissionalFull, IServicoFull } from '@/@types/databaseTypes';
 import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 import { profissionalService } from '@/services/supabase/profissionalService';
 import { CustomStackHeader } from '@/components/shared/CustomStackHeader';
@@ -13,17 +13,29 @@ import { styles } from './styles';
 
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
-import { ActivityIndicator, Avatar, List, SegmentedButtons, Text } from 'react-native-paper';
+import { ActivityIndicator, Avatar, List, SegmentedButtons, Text, TouchableRipple } from 'react-native-paper';
 import { CustomListItem } from '@/components/shared/CustomListItem';
 import { servicoService } from '@/services/supabase/servicoService';
 import { ServicoCardHorizontal } from '@/components/shared/ServicoCardHorizontal';
+import { DialogPerfil } from '@/components/shared/DialogPerfil';
+import { Slider } from '@/components/shared/Slider';
+import { HorarioFuncionamentoItem } from '@/components/shared/HorarioFuncionamentoItem';
+import { agendaService } from '@/services/supabase/agendaService';
+
+const images = [
+    { id: 1, usuario_id: '123', foto: 'https://kannoarquitetura.com.br/wp-content/uploads/2023/06/Editadas-24.jpg' },
+    { id: 2, usuario_id: '123', foto: 'https://carolcunha.design/wp-content/uploads/2021/06/clinica-de-estetica-danielle-bosco-repepc%CC%A7ao.jpeg' },
+    { id: 3, usuario_id: '123', foto: 'https://exhf7dsr2zu.exactdn.com/wp-content/uploads/2021/08/regras-abrir-clinica-1.jpg?strip=all&lossy=1&ssl=1' }
+]
 
 const PerfilProfissional = ({ route }: any) => {
     const [profissionalData, setProfissionalData] = useState<IProfissionalFull>();
     const [servicosProfissional, setServicosProfissional] = useState<IServicoFull[]>([]);
+    const [horarioFuncionamentoData, setHorarioFuncionamentoData] = useState<IAgenda[]>([]);
 
     const [isFavorito, setIsFavorito] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [modalImageIsOpen, setModalImageIsOpen] = useState<boolean>(false);
 
     const [atualizarIsFavorito, setAtualizarIsFavorito] = useState<boolean>(false);
     const [secaoSelecionada, setSecaoSelecionada] = useState<string>('informacoes');
@@ -76,6 +88,18 @@ const PerfilProfissional = ({ route }: any) => {
         checkProfissionalIsFavorito();
     }, [clienteData, profissionalData, atualizarIsFavorito]);
 
+    useEffect(() => {
+        const getHorarioFuncionamento = async () => {
+            if (profissionalData?.id) {
+                const result = await agendaService.getByProfissionalId(profissionalData.id);
+                
+                setHorarioFuncionamentoData(result);
+            }
+        }
+
+        getHorarioFuncionamento();
+    }, [profissionalData])
+
     const addProfissionalFavorito = async () => {
         if (profissionalData && clienteData) {
             await favoritoService.adicionarProfissionalFavorito(clienteData.id, profissionalData.id);
@@ -94,7 +118,7 @@ const PerfilProfissional = ({ route }: any) => {
     return (
         <>
             {isLoading ? (
-                <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                     <ActivityIndicator color={theme.colors.primary} animating />
                 </View>
             ) : (
@@ -112,9 +136,8 @@ const PerfilProfissional = ({ route }: any) => {
                     />
 
                     <View style={styles.containerImage}>
-                        <ImageBackground
-                            style={styles.image}
-                            source={{ uri: profissionalData?.foto_perfil }}
+                        <Slider
+                            data={images}
                         />
                     </View>
 
@@ -126,7 +149,18 @@ const PerfilProfissional = ({ route }: any) => {
                                 <Text variant='titleMedium' style={styles.subtitulo}>Profisisonal de {profissionalData?.area_atuacao.nome}</Text>
                             </View>
 
-                            <Avatar.Image source={{ uri: profissionalData?.foto_perfil }} />
+                            <TouchableRipple onPress={() => setModalImageIsOpen(true)}>
+                                <Avatar.Image source={{ uri: profissionalData?.foto_perfil }} />
+                            </TouchableRipple>
+
+                            {profissionalData?.foto_perfil && (
+                                <DialogPerfil
+                                    foto={profissionalData.foto_perfil}
+                                    isVisible={modalImageIsOpen}
+                                    onDimiss={() => setModalImageIsOpen(false)}
+                                />
+                            )}
+
 
                         </View>
 
@@ -148,13 +182,16 @@ const PerfilProfissional = ({ route }: any) => {
                         {secaoSelecionada === 'informacoes' ? (
                             <View style={styles.containerInformacoes}>
 
-                                <List.Section>
-                                    <List.Accordion title='Horário de Funcionamento'    >
-                                        <List.Item title='Primeiro item' />
-                                        <List.Item title='Segundo Item' />
-                                        <List.Item title='Terceiro Item' />
-                                    </List.Accordion>
-                                </List.Section>
+                                {horarioFuncionamentoData.length > 0 && (
+                                    <List.Section>
+                                        <List.Accordion title='Horário de Funcionamento'    >
+                                            {horarioFuncionamentoData.map(horarioFuncionamento => (
+                                                <HorarioFuncionamentoItem data={horarioFuncionamento} />
+                                            ))}
+                                        </List.Accordion>
+                                    </List.Section>
+                                )}
+
 
                                 <View style={styles.secao}>
                                     <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Sobre</Text>
@@ -217,7 +254,7 @@ const PerfilProfissional = ({ route }: any) => {
                         ) : (
                             <View style={styles.containerServicos}>
                                 {servicosProfissional.map(servico => {
-                                    return(
+                                    return (
                                         <ServicoCardHorizontal data={servico} />
                                     )
                                 })}
