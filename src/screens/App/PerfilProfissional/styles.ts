@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
         fontFamily: theme.fonts.semibold
     },
     subtitulo:{
-        color: theme.colors.gray  
+        color: theme.colors.gray,
+        maxWidth: 300  
     },
     conteudo:{
         padding: 15,
@@ -45,7 +46,12 @@ const styles = StyleSheet.create({
         marginTop: 30
     },
     containerServicos:{
-
+        width: '95%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 'auto',
+        gap: 20,
+        marginVertical: 30
     },
     mapa:{
         

@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ActivityIndicator, Avatar, List, SegmentedButtons, Text } from 'react-native-paper';
 import { CustomListItem } from '@/components/shared/CustomListItem';
 import { servicoService } from '@/services/supabase/servicoService';
+import { ServicoCardHorizontal } from '@/components/shared/ServicoCardHorizontal';
 
 const PerfilProfissional = ({ route }: any) => {
     const [profissionalData, setProfissionalData] = useState<IProfissionalFull>();
@@ -215,7 +216,11 @@ const PerfilProfissional = ({ route }: any) => {
 
                         ) : (
                             <View style={styles.containerServicos}>
-                                <Text>Serviços</Text>
+                                {servicosProfissional.map(servico => {
+                                    return(
+                                        <ServicoCardHorizontal data={servico} />
+                                    )
+                                })}
                             </View>
 
                         )}

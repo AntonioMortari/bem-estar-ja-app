@@ -1,36 +1,30 @@
-
 import { View } from 'react-native';
-import { Button, Card, Text, TouchableRipple } from 'react-native-paper';
-
-import { IServicoFull, IServicos } from '@/@types/databaseTypes';
+import { TouchableRipple, Card, Text, Button } from 'react-native-paper';
 import { styles } from './styles';
+import { IServicoFull } from '@/@types/databaseTypes';
 import { IconWithLabel } from '../IconLabel';
-import { theme } from '@/theme/paper';
 
-// icons
 import { FontAwesome6 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { theme } from '@/theme/paper';
 import { useNavigation } from '@react-navigation/native';
 import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 
-
-interface IServicoCardProps {
+interface IServicoCardHorizontalProps {
     data: IServicoFull;
 }
 
-const ServicoCard = ({ data }: IServicoCardProps) => {
+const ServicoCardHorizontal = ({ data }: IServicoCardHorizontalProps) => {
+
     const navigation = useNavigation<TAppClienteNavigationRoutes>();
 
     return (
-        <TouchableRipple onPress={() => navigation.navigate('DetalhesServico', { idServico: data.id })}>
-            <Card
-                elevation={3}
-                style={styles.container}
-            >
-                <Card.Cover style={styles.cover} src={data.foto} />
+        <TouchableRipple onPress={() => navigation.navigate('DetalhesServico', { idServico: data.id })} style={{ width: '100%' }}>
+            <View style={styles.container} >
+                <Card.Cover style={styles.cover} source={{ uri: data.foto }} />
 
-                <Card.Title title={data.procedimento?.nome} titleVariant='titleMedium' />
-                <Card.Content>
+                <View style={styles.containerContent}>
+                    <Text style={styles.titulo} numberOfLines={1} variant='titleMedium'>{data.procedimento?.nome}</Text>
 
                     <View style={styles.containerIcons}>
 
@@ -53,21 +47,14 @@ const ServicoCard = ({ data }: IServicoCardProps) => {
                         />
                     </View>
 
-                    {/* Preço */}
-                    <Text variant='titleLarge' style={{ marginTop: 10 }}>R${data.procedimento?.preco}</Text>
-
-                    {/* container botões */}
-                    <View style={{ marginTop: 15, flexDirection: 'row', gap: 10, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Button mode='outlined' onPress={() => navigation.navigate('DetalhesServico', { idServico: data.id })}>Detalhes</Button>
-                        <Button mode='contained'>Agendar</Button>
+                    <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center' }}>
+                        <Button style={{transform: [{scale: .8}]}} mode='outlined' onPress={() => navigation.navigate('DetalhesServico', { idServico: data.id })}>Detalhes</Button>
+                        <Button style={{transform: [{scale: .8}]}} mode='contained'>Agendar</Button>
                     </View>
-
-
-                </Card.Content>
-
-            </Card>
+                </View>
+            </View>
         </TouchableRipple>
     );
 }
 
-export { ServicoCard };
+export { ServicoCardHorizontal };

@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Button, Card, Text } from 'react-native-paper';
+import { Button, Card, Text, TouchableRipple } from 'react-native-paper';
 
 import {IProfissionalFull } from '@/@types/databaseTypes';
 import { styles } from './styles';
@@ -7,7 +7,6 @@ import { IconWithLabel } from '../IconLabel';
 import { theme } from '@/theme/paper';
 
 import { FontAwesome6 } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import Stars from '../Stars';
 
@@ -19,8 +18,8 @@ interface IProfissionalCardProps {
 
 const ProfissionalCard = ({ data, onPress }: IProfissionalCardProps) => {
     return (
-        <Card
-            elevation={3}
+        <TouchableRipple onPress={onPress}>
+            <Card
             style={styles.container}
         >
             <Card.Cover style={styles.cover} src={data.foto_perfil} />
@@ -61,6 +60,7 @@ const ProfissionalCard = ({ data, onPress }: IProfissionalCardProps) => {
             </Card.Content>
 
         </Card>
+        </TouchableRipple>
     );
 }
 
