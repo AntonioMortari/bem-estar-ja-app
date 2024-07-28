@@ -28,13 +28,17 @@ interface ICidadeEstadoAtual {
 
 const Home = () => {
     const navigation = useNavigation<TAppClienteNavigationRoutes>();
+    const { clienteData, handleLogout } = useAuth();
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    
 
     const [servicosEmDestaque, setServicosEmDestaque] = useState<IServicoFull[]>([]);
     const [profissionais, setProfissionais] = useState<IProfissionalFull[]>([]);
     const [servicosNovidades, setServicosNovidades] = useState<IServicoFull[]>([]);
+    const [servicosEstetica, setServicosEstetica] = useState<IServicoFull[]>([]);
+    const [servicosMassoterapia, setServicosMassoterapia] = useState<IServicoFull[]>([]);
 
-    const { clienteData, handleLogout } = useAuth();
 
     const [cidadeEstadoAtual, setCidadeEstadoAtual] = useState<ICidadeEstadoAtual | null>(null);
 
@@ -62,6 +66,12 @@ const Home = () => {
                 if (typeof servicosNovidadesResult != 'string') {
                     setServicosNovidades(servicosNovidadesResult);
                 }
+
+                const servicosEsteticaResult = await servicoService.getServicosEstetica(cidadeEstadoAtual.cidade, cidadeEstadoAtual.estado)
+                setServicosEstetica(servicosEsteticaResult);
+
+                const servicosMassoterapiaResult = await servicoService.getServicosMassoterapia(cidadeEstadoAtual.cidade, cidadeEstadoAtual.estado);
+                setServicosMassoterapia(servicosMassoterapiaResult);   
             }
 
             setIsLoading(false);
@@ -253,8 +263,37 @@ const Home = () => {
                                 </View>
                             )}
 
+                            {servicosEstetica.length > 0 && (
+                                <View>
+                                    {/* Seção Serviços em Destaque */}
+                                    <TituloSecao
+                                        titulo={`Estética`}
+                                        onPress={() => console.log('Olá')}
+                                    />
 
+                                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                        {servicosEstetica.map((servico, index) => (
+                                            <ServicoCard data={servico} key={servico.id + index} />
+                                        ))}
+                                    </ScrollView>
+                                </View>
+                            )}
 
+                            {servicosMassoterapia.length > 0 && (
+                                <View>
+                                    {/* Seção Serviços em Destaque */}
+                                    <TituloSecao
+                                        titulo={`Massoterapia`}
+                                        onPress={() => console.log('Olá')}
+                                    />
+
+                                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                        {servicosMassoterapia.map((servico, index) => (
+                                            <ServicoCard data={servico} key={servico.id + index} />
+                                        ))}
+                                    </ScrollView>
+                                </View>
+                            )}
 
                         </View>
                     )}

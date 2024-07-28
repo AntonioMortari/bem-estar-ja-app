@@ -130,11 +130,55 @@ const getByProfissionalId = async (profissionalId: number): Promise<IServicoFull
     return result || [];
 }
 
+const getServicosEstetica = async (cidade: string, estado: string): Promise<IServicoFull[]> => {
+    const { data, error } = await supabase
+        .from(Tabelas.servicos)
+        .select(`*,
+                ${joins}
+            `)
+        .eq('procedimento.area_atuacao_id', 1)
+        .eq('endereco.cidade', cidade)
+        .eq('endereco.estado', estado)
+        .returns<IServicoFull[]>();
+
+    if (error) {
+        console.log('ERRO AO BUSCAR SERVIÇOS DE ESTÈTICA: ', error);
+        return [];
+    }
+
+    const result = data.filter(servico => servico.endereco != undefined && servico.profissional != undefined && servico.procedimento != undefined);
+
+    return result || [];
+}
+
+const getServicosMassoterapia = async (cidade: string, estado: string): Promise<IServicoFull[]> => {
+    const { data, error } = await supabase
+        .from(Tabelas.servicos)
+        .select(`*,
+                ${joins}
+            `)
+        .eq('procedimento.area_atuacao_id', 2)
+        .eq('endereco.cidade', cidade)
+        .eq('endereco.estado', estado)
+        .returns<IServicoFull[]>();
+
+    if (error) {
+        console.log('ERRO AO BUSCAR SERVIÇOS DE MASSOTERAPIA: ', error);
+        return [];
+    }
+
+    const result = data.filter(servico => servico.endereco != undefined && servico.profissional != undefined && servico.procedimento != undefined);
+
+    return result || [];
+}
+
 export const servicoService = {
     getAll,
     getMelhorAvaliados,
     getNovidades,
     getById,
     getServicosSemelheantes,
-    getByProfissionalId
+    getByProfissionalId,
+    getServicosEstetica,
+    getServicosMassoterapia
 };

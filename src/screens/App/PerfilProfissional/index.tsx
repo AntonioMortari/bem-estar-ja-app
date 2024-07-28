@@ -186,7 +186,7 @@ const PerfilProfissional = ({ route }: any) => {
                                     <List.Section>
                                         <List.Accordion title='Horário de Funcionamento'    >
                                             {horarioFuncionamentoData.map(horarioFuncionamento => (
-                                                <HorarioFuncionamentoItem data={horarioFuncionamento} />
+                                                <HorarioFuncionamentoItem key={horarioFuncionamento.id} data={horarioFuncionamento} />
                                             ))}
                                         </List.Accordion>
                                     </List.Section>
@@ -241,6 +241,12 @@ const PerfilProfissional = ({ route }: any) => {
                                             if (info === 'cnpj') {
                                                 return (
                                                     <CustomListItem text={`CNPJ: ${profissionalData.outras_informacoes[info]}`} />
+                                                )
+                                            }
+
+                                            if(info === 'clientes_atendidos'){
+                                                return(
+                                                    <CustomListItem text={`Mais de ${profissionalData.outras_informacoes[info]} clientes atendidos`} />
                                                 )
                                             }
                                         })}
