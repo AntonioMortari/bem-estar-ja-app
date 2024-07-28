@@ -1,10 +1,53 @@
-import { Text } from 'react-native-paper';
-
+import { SafeAreaView, View } from "react-native";
+import { theme } from "@/theme/paper";
+import { Searchbar, Text, SegmentedButtons } from "react-native-paper";
+import { styles } from "./styles";
+import { useState } from "react";
 
 const Favoritos = () => {
-    return (
-        <Text variant='titleLarge'>Favoritos</Text>
-    );
-}
+  const [value, setValue] = useState<string>('servicos');
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={styles.containerHeader}>
+
+        <Text variant="headlineMedium" style={{ color: theme.colors.light }}>
+          Meus Favoritos
+        </Text>
+
+        <View style={styles.containerBusca}>
+          <Searchbar
+            style={styles.inputBusca}
+            placeholder="Faça sua pesquisa"
+            elevation={3}
+            placeholderTextColor={theme.colors.gray}
+            value={""}
+          />
+        </View>
+
+      </View>
+
+      <SegmentedButtons
+        value={value}
+        onValueChange={setValue}
+        buttons={[
+          {
+            value: 'servicos',
+            label: 'Serviços',
+          },
+          {
+            value: 'profissionais',
+            label: 'Profissionais',
+          }
+        ]}
+      />
+
+    </View>
+
+  );
+};
+
+
+
 
 export { Favoritos };
