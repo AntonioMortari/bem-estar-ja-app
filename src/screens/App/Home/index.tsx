@@ -21,7 +21,7 @@ import { DialogEnderecos } from '@/components/shared/DialogEnderecos';
 import { notify } from 'react-native-notificated';
 import { utils } from '@/utils';
 
-interface ICidadeEstadoAtual {
+export interface ICidadeEstadoAtual {
     cidade: string;
     estado: string;
 }
@@ -31,7 +31,7 @@ const Home = () => {
     const { clienteData, handleLogout } = useAuth();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    
+    const [valorBusca, setValorBusca] = useState<string>('');
 
     const [servicosEmDestaque, setServicosEmDestaque] = useState<IServicoFull[]>([]);
     const [profissionais, setProfissionais] = useState<IProfissionalFull[]>([]);
@@ -71,7 +71,7 @@ const Home = () => {
                 setServicosEstetica(servicosEsteticaResult);
 
                 const servicosMassoterapiaResult = await servicoService.getServicosMassoterapia(cidadeEstadoAtual.cidade, cidadeEstadoAtual.estado);
-                setServicosMassoterapia(servicosMassoterapiaResult);   
+                setServicosMassoterapia(servicosMassoterapiaResult);
             }
 
             setIsLoading(false);
@@ -150,6 +150,12 @@ const Home = () => {
         setLocalizacaoIsLoading(false);
     }
 
+    const goSearch = () => {
+        setValorBusca('');
+
+        navigation.navigate('Busca', { searchValueParam: valorBusca });
+    }
+
 
     return (
         <ScrollView>
@@ -197,7 +203,9 @@ const Home = () => {
                     placeholder='Faça sua pesquisa'
                     elevation={3}
                     placeholderTextColor={theme.colors.gray}
-                    value={''}
+                    value={valorBusca}
+                    onChangeText={setValorBusca}
+                    onEndEditing={goSearch}
                 />
 
             </View>

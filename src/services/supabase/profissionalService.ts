@@ -31,7 +31,7 @@ const getById = async (idProfissional: number): Promise<IProfissionalFull | null
         .eq('id', idProfissional)
         .single<IProfissionalFull>();
 
-    if(error){
+    if (error) {
         console.log('ERRO AO BUSCAR PROFISSIONAL POR ID', error);
         return null;
     }
@@ -40,7 +40,25 @@ const getById = async (idProfissional: number): Promise<IProfissionalFull | null
     return data;
 }
 
+const procurarProfissionais = async (value: string): Promise<IProfissionalFull[]> => {
+    const { data, error } = await supabase
+        .from(Tabelas.profissionais)
+        .select(`*, ${joins}`)
+        .ilike('nome', `${value}%`)
+        .returns<IProfissionalFull[]>();
+
+    if(error){
+        console.log('ERRO AO PESQUISAR PROFISSIONAIS: ', error)
+        return [];
+    }
+    
+    const result = data.filter(profissional => profissional.id != undefined);
+
+    return result || [];
+}
+
 export const profissionalService = {
     getAll,
-    getById
+    getById,
+    procurarProfissionais
 }

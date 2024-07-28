@@ -172,6 +172,24 @@ const getServicosMassoterapia = async (cidade: string, estado: string): Promise<
     return result || [];
 }
 
+const procurarServicos = async (value: string): Promise<IServicoFull[]> => {
+    const { data, error } = await supabase
+        .from(Tabelas.servicos)
+        .select(`*, ${joins}`)
+        .ilike('procedimento.nome', `${value}%`)
+        // .ilike('profissional.nome', `${value}%`)
+        .returns<IServicoFull[]>();
+
+    if (error) {
+        console.log('ERRO AO PESQUISAR POR SERVIÇOS', error);
+        return [];
+    }
+
+    const result = data.filter(servico => servico.procedimento != undefined && servico.profissional != undefined);
+
+    return result || [];
+}
+
 export const servicoService = {
     getAll,
     getMelhorAvaliados,
@@ -180,5 +198,6 @@ export const servicoService = {
     getServicosSemelheantes,
     getByProfissionalId,
     getServicosEstetica,
-    getServicosMassoterapia
+    getServicosMassoterapia,
+    procurarServicos
 };
