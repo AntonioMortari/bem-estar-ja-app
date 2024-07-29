@@ -1,5 +1,6 @@
 import { IServicoFull, Tabelas } from '@/@types/databaseTypes';
 import { supabase } from '.';
+import { TCategoriaNomeVerTodos } from '@/@types/routes/AppRoutes';
 
 const joins = `procedimento:procedimento_id(*, area_atuacao:area_atuacao_id(id, nome)),
                 profissional:profissional_id(*, area_atuacao:area_atuacao_id(nome)),
@@ -23,7 +24,7 @@ const getAll = async (): Promise<IServicoFull[] | string> => {
     return data || [];
 }
 
-const getMelhorAvaliados = async (cidade: string, estado: string): Promise<IServicoFull[] | string> => {
+const getMelhorAvaliados = async (cidade: string, estado: string): Promise<IServicoFull[]> => {
     // busca os serviços de uma região com avaliações maiores ou iguais a 4.5
     const { data, error } = await supabase
         .from(Tabelas.servicos)
@@ -34,15 +35,14 @@ const getMelhorAvaliados = async (cidade: string, estado: string): Promise<IServ
         .gte('avaliacao', 4.5)
         .eq('endereco.cidade', cidade)
         .eq('endereco.estado', estado)
-        .limit(6)
         .returns<IServicoFull[]>();
 
     if (error) {
         console.log('ERRO AO BUSCAR SERVIÇOS MELHOR AVALIADOS');
-        return error.message;
+        return [];
     }
 
-    if (!data[0].endereco) return []
+    if (!data[0].endereco) return [];
 
     return data || [];
 }
@@ -62,7 +62,7 @@ const getNovidades = async (cidade: string, estado: string) => {
 
     if (error) {
         console.log('ERRO AO BUSCAR POR NOVIDADES', error)
-        return error.message;
+        return [];
     }
 
     if (!data[0].endereco) return [];
@@ -190,6 +190,40 @@ const procurarServicos = async (value: string): Promise<IServicoFull[]> => {
     return result || [];
 }
 
+const getByCategoriaNome = async(categoriaNome: TCategoriaNomeVerTodos, cidade: string, estado: string) => {
+    let data: IServicoFull[] = [];
+
+    switch (categoriaNome) {
+        case 'Estética':
+            data = await getServicosEstetica(cidade, estado);
+            break;
+
+        case 'Massoterapia':
+            data = await getServicosMassoterapia(cidade, estado);
+            break;
+
+        case 'Novidades':
+            data = await getNovidades(cidade, estado);
+            break;  
+
+        case 'Serviços em Destaque':
+            data = await getMelhorAvaliados(cidade, estado);
+            console.log(data);
+            break;
+    
+        default:
+            break;
+    }
+
+    const result = data.filter(servico => 
+        servico.endereco != undefined && 
+        servico.procedimento != undefined && 
+        servico.profissional != undefined
+    )
+
+    return result || [];
+}
+
 export const servicoService = {
     getAll,
     getMelhorAvaliados,
@@ -199,5 +233,6 @@ export const servicoService = {
     getByProfissionalId,
     getServicosEstetica,
     getServicosMassoterapia,
-    procurarServicos
+    procurarServicos,
+    getByCategoriaNome
 };

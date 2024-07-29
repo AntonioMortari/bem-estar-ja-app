@@ -228,13 +228,17 @@ const Home = () => {
                                     {/* Seção Profissionais perto de você */}
                                     <TituloSecao
                                         titulo='Profissionais perto de você'
-                                        onPress={() => console.log('Olá')}
+                                        onPress={() => navigation.navigate('VerTodos', { categoriaNome: 'Profissionais perto de você', cidade: cidadeEstadoAtual?.cidade || '', estado: cidadeEstadoAtual?.estado || '' })}
                                     />
 
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                        {profissionais.map(profissional => (
-                                            <ProfissionalCard onPress={() => navigation.navigate('PerfilProfissional', { idProfissional: profissional.id })} data={profissional} key={profissional.id} />
-                                        ))}
+                                        {profissionais.map((profissional, index) => {
+                                            if (index < 4) {
+                                                return (
+                                                    <ProfissionalCard onPress={() => navigation.navigate('PerfilProfissional', { idProfissional: profissional.id })} data={profissional} key={profissional.id} />
+                                                )
+                                            }
+                                        })}
                                     </ScrollView>
                                 </View>
                             )}
@@ -244,13 +248,17 @@ const Home = () => {
                                     {/* Seção Serviços em Destaque */}
                                     <TituloSecao
                                         titulo='Serviços em Destaque'
-                                        onPress={() => console.log('Olá')}
+                                        onPress={() => navigation.navigate('VerTodos', { categoriaNome: 'Serviços em Destaque', cidade: cidadeEstadoAtual?.cidade || '', estado: cidadeEstadoAtual?.estado || '' })}
                                     />
 
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                        {servicosEmDestaque.map(servico => (
-                                            <ServicoCard data={servico} key={servico.id} />
-                                        ))}
+                                        {servicosEmDestaque.map((servico, index) => {
+                                            if (index < 4) {
+                                                return (
+                                                    <ServicoCard data={servico} key={servico.id} />
+                                                )
+                                            }
+                                        })}
                                     </ScrollView>
                                 </View>
                             )}
@@ -260,13 +268,17 @@ const Home = () => {
                                     {/* Seção Serviços em Destaque */}
                                     <TituloSecao
                                         titulo={`Novidades em ${cidadeEstadoAtual?.cidade}`}
-                                        onPress={() => console.log('Olá')}
+                                        onPress={() => navigation.navigate('VerTodos', { categoriaNome: 'Novidades', cidade: cidadeEstadoAtual?.cidade || '', estado: cidadeEstadoAtual?.estado || '' })}
                                     />
 
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                        {servicosNovidades.map((servico, index) => (
-                                            <ServicoCard data={servico} key={servico.id + index} />
-                                        ))}
+                                        {servicosNovidades.map((servico, index) => {
+                                            if (index < 4) {
+                                                return (
+                                                    <ServicoCard data={servico} key={servico.id} />
+                                                )
+                                            }
+                                        })}
                                     </ScrollView>
                                 </View>
                             )}
@@ -276,13 +288,17 @@ const Home = () => {
                                     {/* Seção Serviços em Destaque */}
                                     <TituloSecao
                                         titulo={`Estética`}
-                                        onPress={() => console.log('Olá')}
+                                        onPress={() => navigation.navigate('VerTodos', { categoriaNome: 'Estética', cidade: cidadeEstadoAtual?.cidade || '', estado: cidadeEstadoAtual?.estado || '' })}
                                     />
 
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                        {servicosEstetica.map((servico, index) => (
-                                            <ServicoCard data={servico} key={servico.id + index} />
-                                        ))}
+                                        {servicosEstetica.map((servico, index) => {
+                                            if (index < 4) {
+                                                return (
+                                                    <ServicoCard data={servico} key={servico.id} />
+                                                )
+                                            }
+                                        })}
                                     </ScrollView>
                                 </View>
                             )}
@@ -292,13 +308,17 @@ const Home = () => {
                                     {/* Seção Serviços em Destaque */}
                                     <TituloSecao
                                         titulo={`Massoterapia`}
-                                        onPress={() => console.log('Olá')}
+                                        onPress={() => navigation.navigate('VerTodos', { categoriaNome: 'Massoterapia', cidade: cidadeEstadoAtual?.cidade || '', estado: cidadeEstadoAtual?.estado || '' })}
                                     />
 
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                        {servicosMassoterapia.map((servico, index) => (
-                                            <ServicoCard data={servico} key={servico.id + index} />
-                                        ))}
+                                        {servicosMassoterapia.map((servico, index) => {
+                                            if (index < 4) {
+                                                return (
+                                                    <ServicoCard data={servico} key={servico.id} />
+                                                )
+                                            }
+                                        })}
                                     </ScrollView>
                                 </View>
                             )}

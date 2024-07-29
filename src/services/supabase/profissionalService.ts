@@ -4,7 +4,7 @@ import { supabase } from ".";
 const joins = `area_atuacao:area_atuacao_id(*)`;
 
 
-const getAll = async (): Promise<IProfissionalFull[] | string> => {
+const getAll = async (): Promise<IProfissionalFull[]> => {
     const { data, error } = await supabase
         .from(Tabelas.profissionais)
         .select(`
@@ -15,7 +15,7 @@ const getAll = async (): Promise<IProfissionalFull[] | string> => {
 
     if (error) {
         console.log('ERRO AO BUSCAR PROFISSIONAIS: ', error);
-        return error.message;
+        return [];
     }
 
     return data || [];
@@ -40,6 +40,27 @@ const getById = async (idProfissional: number): Promise<IProfissionalFull | null
     return data;
 }
 
+const getByCidadeEstado = async (cidade: string, estado: string) => {
+    const { data, error } = await supabase
+        .from(Tabelas.profissionais)
+        .select(`
+            *,
+            ${joins}
+            `)
+        .eq('endereco.cidade', cidade)
+        .eq('endereco.estado', estado)
+        .returns<IProfissionalFull[]>();
+
+    if(error){
+        console.log('ERRO AO BUSCAR PROFISSIONAIS POR CIDADE E ESTADO: ', error);
+        return [];
+    }
+
+    const result = data.filter(profissioal => profissioal.endereco != undefined);
+
+    return result || [];
+}
+
 const procurarProfissionais = async (value: string): Promise<IProfissionalFull[]> => {
     const { data, error } = await supabase
         .from(Tabelas.profissionais)
@@ -47,11 +68,11 @@ const procurarProfissionais = async (value: string): Promise<IProfissionalFull[]
         .ilike('nome', `${value}%`)
         .returns<IProfissionalFull[]>();
 
-    if(error){
+    if (error) {
         console.log('ERRO AO PESQUISAR PROFISSIONAIS: ', error)
         return [];
     }
-    
+
     const result = data.filter(profissional => profissional.id != undefined);
 
     return result || [];
@@ -60,5 +81,6 @@ const procurarProfissionais = async (value: string): Promise<IProfissionalFull[]
 export const profissionalService = {
     getAll,
     getById,
-    procurarProfissionais
+    procurarProfissionais,
+    getByCidadeEstado
 }
