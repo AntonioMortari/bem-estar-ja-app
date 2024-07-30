@@ -172,12 +172,13 @@ const getServicosMassoterapia = async (cidade: string, estado: string): Promise<
     return result || [];
 }
 
-const procurarServicos = async (value: string): Promise<IServicoFull[]> => {
+const procurarServicos = async (value: string, cidade: string, estado: string): Promise<IServicoFull[]> => {
     const { data, error } = await supabase
         .from(Tabelas.servicos)
         .select(`*, ${joins}`)
         .ilike('procedimento.nome', `${value}%`)
-        // .ilike('profissional.nome', `${value}%`)
+        .eq('endereco.cidade', cidade)
+        .eq('endereco.estado', estado)
         .returns<IServicoFull[]>();
 
     if (error) {
@@ -185,7 +186,7 @@ const procurarServicos = async (value: string): Promise<IServicoFull[]> => {
         return [];
     }
 
-    const result = data.filter(servico => servico.procedimento != undefined && servico.profissional != undefined);
+    const result = data.filter(servico => servico.procedimento != undefined && servico.profissional != undefined && servico.endereco != undefined);
 
     return result || [];
 }

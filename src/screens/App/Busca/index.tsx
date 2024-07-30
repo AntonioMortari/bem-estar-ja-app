@@ -2,8 +2,8 @@ import { DialogEnderecos } from '@/components/shared/DialogEnderecos';
 import { useAuth } from '@/hooks/useAuth';
 import { enderecoService } from '@/services/supabase/enderecoService';
 import { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import { ActivityIndicator, Searchbar, SegmentedButtons, Text, TouchableRipple } from 'react-native-paper';
+import { Image, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Button, Searchbar, SegmentedButtons, Text, TouchableRipple } from 'react-native-paper';
 import { ICidadeEstadoAtual } from '../Home';
 import { styles } from './styles';
 import { notify } from 'react-native-notificated';
@@ -28,19 +28,20 @@ const Busca = ({ route }: any) => {
     const [servicosResult, setServicosResult] = useState<IServicoFull[]>([]);
     const [profissionalResult, setProfissionalResult] = useState<IProfissionalFull[]>([]);
 
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [localizacaoIsLoading, setLocalizacaoIsLoading] = useState<boolean>(true);
     const [dialogEnderecoIsVisible, setDialogEnderecoIsVisible] = useState<boolean>(false);
+    const [fezBusca, setFezBusca] = useState<boolean>(false);
+    const [exibirFacaSuaPesquisa, setExibirFacaSuaPesquisa] = useState<boolean>(false);
 
     const [cidadeEstadoAtual, setCidadeEstadoAtual] = useState<ICidadeEstadoAtual | null>(null);
     const [localizacaoValue, setLocalizacaoValue] = useState<string>('localizacaoAtual');
-    const [secaoSelecionada, setSecaoSelecionada] = useState<string>('');
+    const [secaoSelecionada, setSecaoSelecionada] = useState<string>('servicos');
 
     const [valorBusca, setValorBusca] = useState<string>(route.params?.searchValueParam || '');
 
     // useFocusEffect(() => {
-    //     setValorBusca(route.params?.searchValueParam || '');
-    // });
+    //     setValorBusca(route.params?.searchValueParam || '
 
 
     useEffect(() => {
@@ -88,6 +89,8 @@ const Busca = ({ route }: any) => {
                     cidade: result.cidade,
                     estado: result.estado
                 });
+
+                
             } else {
                 // caso algo de errado na busca por localização
                 notify('error', {
@@ -110,27 +113,41 @@ const Busca = ({ route }: any) => {
             }
         }
 
+        if(valorBusca.length > 0){
+            handleOnEndEditing();
+        }
+
         setLocalizacaoIsLoading(false);
     }
 
     const procurarServico = async () => {
-        console.log('buscar')
         setIsLoading(true);
-        const result = await servicoService.procurarServicos(valorBusca);
+        setIsLoading(true);
 
-        setServicosResult(result);
-
-        setIsLoading(false);
+        if (cidadeEstadoAtual) {
+            const result = await servicoService.procurarServicos(valorBusca, cidadeEstadoAtual?.cidade, cidadeEstadoAtual?.estado);
+            setServicosResult(result);
+        }
     }
 
     const procurarProfissional = async () => {
+        setIsLoading(true);
         const result = await profissionalService.procurarProfissionais(valorBusca);
 
         setProfissionalResult(result);
     }
 
+    const handleOnEndEditing = () => {
+        if (valorBusca.length === 0) return;
+
+        procurarProfissional();
+        procurarServico();
+        setFezBusca(true);
+        setIsLoading(false);
+    }
+
     return (
-        <ScrollView>
+        <ScrollView style={{ flex: 1 }}>
             <View style={styles.header}>
                 {/* Modal de selecionar endereço */}
                 <DialogEnderecos
@@ -168,11 +185,14 @@ const Busca = ({ route }: any) => {
                         elevation={3}
                         placeholderTextColor={theme.colors.gray}
                         value={valorBusca}
-                        onChangeText={setValorBusca}
-                        onEndEditing={() => {
-                            procurarProfissional();
-                            procurarServico();
+                        onChangeText={(text) => {
+                            setValorBusca(text);
+
+                            if (text.length === 0) {
+                                setFezBusca(false);
+                            }
                         }}
+                        onEndEditing={handleOnEndEditing}
                     />
 
                 </View>
@@ -180,47 +200,90 @@ const Busca = ({ route }: any) => {
             </View>
 
             {isLoading ? (
-                <View style={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                    <ActivityIndicator animating color={theme.colors.primary} />
-                </View>
+                <ActivityIndicator style={{ marginTop: 50 }} animating color={theme.colors.primary} />
             ) : (
                 <>
-                    <SegmentedButtons
-                        value={secaoSelecionada}
-                        onValueChange={(value) => setSecaoSelecionada(value)}
-                        style={{marginTop: 30, width: '90%', margin: 'auto'}}
-                        buttons={[
-                            {
-                                value: 'servicos',
-                                label: 'Serviços',
-                            },
-                            {
-                                value: 'profissionais',
-                                label: 'Profissionais',
-                            },
-                        ]}
-                    />
+                    {!fezBusca ? (
+                        <View style={{ gap: 20, alignItems: 'center', justifyContent: 'center', marginTop: 50 }}>
+                            <Text variant='titleLarge' style={{ textAlign: 'center' }}>Pesquise por um serviço ou profissional na sua região</Text>
 
-                    {secaoSelecionada === 'servicos' ? (
-                        <View style={styles.containerResult}>
-                            {servicosResult.map(servico => {
-                                return (
-                                    <ServicoCardHorizontal data={servico} key={servico.id} />
-                                )
-                            })}
+                            <Image
+                                source={require('@/images/search-image.png')}
+                                style={{ width: 300, height: 300 }}
+                            />
                         </View>
                     ) : (
-                        <View style={styles.containerResult}>
-                            {profissionalResult.map(profissional => {
-                                return (
-                                    <ProfissionalCardHorizontal data={profissional} key={profissional.id} />
-                                )
-                            })}
-                        </View>
+                        <>
+                            {fezBusca && valorBusca.length > 0 && servicosResult.length === 0 && profissionalResult.length === 0 ? (
+                                <View style={{ gap: 20, alignItems: 'center', justifyContent: 'center', marginTop: 20, height: '100%' }}>
+
+                                    <View style={{alignItems: 'center', gap: 10}}>
+                                        <Text style={{ fontFamily: theme.fonts.semibold, textAlign: 'center', paddingHorizontal: 20 }}>Sem resultados para a busca "{valorBusca}" na sua região</Text>
+
+                                        <Button mode='text' onPress={handleCidadeEstadoAtual}>Tente outro endereço</Button>
+                                    </View>
+
+                                    <Image
+                                        source={require('@/images/no-results-search.png')}
+                                        style={{ width: 300, height: 300 }}
+                                    />
+                                </View> 
+                            ) : (
+                                <>
+                                    {fezBusca && (
+                                        <>
+                                            <SegmentedButtons
+                                                value={secaoSelecionada}
+                                                onValueChange={(value) => setSecaoSelecionada(value)}
+                                                style={{ marginTop: 30, width: '90%', margin: 'auto' }}
+                                                buttons={[
+                                                    {
+                                                        value: 'servicos',
+                                                        label: 'Serviços',
+                                                    },
+                                                    {
+                                                        value: 'profissionais',
+                                                        label: 'Profissionais',
+                                                    },
+                                                ]}
+                                            />
+                                            {secaoSelecionada === 'servicos' ? (
+                                                <>
+                                                    {servicosResult.length > 0 ? (
+                                                        <View style={styles.containerResult}>
+                                                            {servicosResult.map(servico => {
+                                                                return (
+                                                                    <ServicoCardHorizontal data={servico} key={servico.id} />
+                                                                )
+                                                            })}
+                                                        </View>
+                                                    ) : (
+                                                        <Text variant='bodyLarge' style={{ paddingHorizontal: 20, marginTop: 25 }}>Nenhum serviço encontrado com o nome "{valorBusca}"</Text>
+
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {profissionalResult.length > 0 ? (
+                                                        <View style={styles.containerResult}>
+                                                            {profissionalResult.map(profissional => {
+                                                                return (
+                                                                    <ProfissionalCardHorizontal data={profissional} key={profissional.id} />
+                                                                )
+                                                            })}
+                                                        </View>
+                                                    ) : (
+                                                        <Text variant='bodyLarge' style={{ paddingHorizontal: 20, marginTop: 25 }}>Nenhum profissional encontrado com o nome "{valorBusca}"</Text>
+                                                    )}
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </>
                     )}
-
                 </>
-
             )
             }
 
