@@ -1,7 +1,7 @@
 import { DialogEnderecos } from '@/components/shared/DialogEnderecos';
 import { useAuth } from '@/hooks/useAuth';
 import { enderecoService } from '@/services/supabase/enderecoService';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
 import { ActivityIndicator, Button, Searchbar, SegmentedButtons, Text, TouchableRipple } from 'react-native-paper';
 import { ICidadeEstadoAtual } from '../Home';
@@ -32,7 +32,6 @@ const Busca = ({ route }: any) => {
     const [localizacaoIsLoading, setLocalizacaoIsLoading] = useState<boolean>(true);
     const [dialogEnderecoIsVisible, setDialogEnderecoIsVisible] = useState<boolean>(false);
     const [fezBusca, setFezBusca] = useState<boolean>(false);
-    const [exibirFacaSuaPesquisa, setExibirFacaSuaPesquisa] = useState<boolean>(false);
 
     const [cidadeEstadoAtual, setCidadeEstadoAtual] = useState<ICidadeEstadoAtual | null>(null);
     const [localizacaoValue, setLocalizacaoValue] = useState<string>('localizacaoAtual');
@@ -40,8 +39,19 @@ const Busca = ({ route }: any) => {
 
     const [valorBusca, setValorBusca] = useState<string>(route.params?.searchValueParam || '');
 
-    // useFocusEffect(() => {
-    //     setValorBusca(route.params?.searchValueParam || '
+
+    useFocusEffect(() => {
+        focusSearchbar();
+    })
+
+    const searchbarRef: any = useRef();
+
+    // Função para focar no campo de entrada
+    const focusSearchbar = () => {
+        if (searchbarRef.current) {
+            searchbarRef.current.focus()
+        }
+    };
 
 
     useEffect(() => {
@@ -90,7 +100,16 @@ const Busca = ({ route }: any) => {
                     estado: result.estado
                 });
 
-                
+                if (valorBusca.length > 0) {
+                    // procurar serviços e profissionais com endereço atualizado
+                    const result1 = await servicoService.procurarServicos(valorBusca, result.cidade, result.estado);
+                    setServicosResult(result1);
+
+                    const result2 = await profissionalService.procurarProfissionais(valorBusca);
+                    setProfissionalResult(result2)
+                }
+
+
             } else {
                 // caso algo de errado na busca por localização
                 notify('error', {
@@ -110,18 +129,22 @@ const Busca = ({ route }: any) => {
                     cidade: enderecoSelecionado.cidade,
                     estado: enderecoSelecionado.estado
                 });
-            }
-        }
 
-        if(valorBusca.length > 0){
-            handleOnEndEditing();
+                if (valorBusca.length > 0) {
+                    // procurar serviços e profissionais com endereço atualizado
+                    const result1 = await servicoService.procurarServicos(valorBusca, enderecoSelecionado.cidade, enderecoSelecionado.estado);
+                    setServicosResult(result1);
+
+                    const result2 = await profissionalService.procurarProfissionais(valorBusca);
+                    setProfissionalResult(result2)
+                }
+            }
         }
 
         setLocalizacaoIsLoading(false);
     }
 
     const procurarServico = async () => {
-        setIsLoading(true);
         setIsLoading(true);
 
         if (cidadeEstadoAtual) {
@@ -138,11 +161,13 @@ const Busca = ({ route }: any) => {
     }
 
     const handleOnEndEditing = () => {
-        if (valorBusca.length === 0) return;
+        // quando clicar no botão de pesquisar na barra de pesquisa
+        if (valorBusca.length === 0) return; //se não houver nada digitado, não faz nada
 
         procurarProfissional();
         procurarServico();
-        setFezBusca(true);
+
+        setFezBusca(true); // inidica que a busca foi feita
         setIsLoading(false);
     }
 
@@ -185,10 +210,12 @@ const Busca = ({ route }: any) => {
                         elevation={3}
                         placeholderTextColor={theme.colors.gray}
                         value={valorBusca}
+                        ref={searchbarRef}
                         onChangeText={(text) => {
                             setValorBusca(text);
 
                             if (text.length === 0) {
+                                // se o campo estiver vazio
                                 setFezBusca(false);
                             }
                         }}
@@ -215,9 +242,10 @@ const Busca = ({ route }: any) => {
                     ) : (
                         <>
                             {fezBusca && valorBusca.length > 0 && servicosResult.length === 0 && profissionalResult.length === 0 ? (
+                                // se uma busca foi feita mas não há resultados
                                 <View style={{ gap: 20, alignItems: 'center', justifyContent: 'center', marginTop: 20, height: '100%' }}>
 
-                                    <View style={{alignItems: 'center', gap: 10}}>
+                                    <View style={{ alignItems: 'center', gap: 10 }}>
                                         <Text style={{ fontFamily: theme.fonts.semibold, textAlign: 'center', paddingHorizontal: 20 }}>Sem resultados para a busca "{valorBusca}" na sua região</Text>
 
                                         <Button mode='text' onPress={handleCidadeEstadoAtual}>Tente outro endereço</Button>
@@ -227,10 +255,11 @@ const Busca = ({ route }: any) => {
                                         source={require('@/images/no-results-search.png')}
                                         style={{ width: 300, height: 300 }}
                                     />
-                                </View> 
+                                </View>
                             ) : (
                                 <>
                                     {fezBusca && (
+                                        // se uma busca foi feita e tem resultados em pelo menos uma categoria (profissional ou serviço)
                                         <>
                                             <SegmentedButtons
                                                 value={secaoSelecionada}

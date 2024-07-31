@@ -151,9 +151,7 @@ const Home = () => {
     }
 
     const goSearch = () => {
-        setValorBusca('');
-
-        navigation.navigate('Busca', { searchValueParam: valorBusca });
+        navigation.navigate('Busca');
     }
 
 
@@ -205,7 +203,7 @@ const Home = () => {
                     placeholderTextColor={theme.colors.gray}
                     value={valorBusca}
                     onChangeText={setValorBusca}
-                    onEndEditing={goSearch}
+                    onFocus={goSearch}
                 />
 
             </View>

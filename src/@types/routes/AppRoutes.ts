@@ -12,7 +12,7 @@ export type TAppClienteRoutes = {
 export type TAppClienteMainTabsRoutes = {
     Home: undefined;
     Agendamentos: undefined;
-    Busca: { searchValueParam: string };
+    Busca: undefined;
     Perfil: undefined;
     Favoritos: undefined;
 }
