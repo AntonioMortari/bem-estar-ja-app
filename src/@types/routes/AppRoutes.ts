@@ -4,9 +4,11 @@ export type TCategoriaNomeVerTodos = 'Profissionais perto de você' | 'Serviços
 
 export type TAppClienteRoutes = {
     MainTabs: undefined;
+    PerfilRotas: undefined;
     PerfilProfissional: { idProfissional: number };
     DetalhesServico: { idServico: number };
-    VerTodos: { categoriaNome: TCategoriaNomeVerTodos, cidade: string, estado: string};
+    VerTodos: { categoriaNome: TCategoriaNomeVerTodos, cidade: string, estado: string };
+    NovoEndereco: undefined;
 }
 
 export type TAppClienteMainTabsRoutes = {
@@ -15,6 +17,15 @@ export type TAppClienteMainTabsRoutes = {
     Busca: undefined;
     Perfil: undefined;
     Favoritos: undefined;
+}
+
+export type TAppClientePerfilRoutes = {
+    // rotas do perfil
+    InformacoesPessoais: undefined;
+    DadosAcesso: undefined;
+    Enderecos: undefined;
+    NovoEndereco: undefined;
+    PerguntasFrequentes: undefined;
 }
 
 export type TAppClienteNavigationRoutes = BottomTabNavigationProp<TAppClienteRoutes & TAppClienteMainTabsRoutes>
