@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 20,
-        padding: 5
+        padding: 8
     },
     diaSemana:{
         width: 150

@@ -13,7 +13,7 @@ import { styles } from './styles';
 
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
-import { ActivityIndicator, Avatar, List, SegmentedButtons, Text, TouchableRipple } from 'react-native-paper';
+import { ActivityIndicator, Avatar, Button, List, SegmentedButtons, Text, TouchableRipple } from 'react-native-paper';
 import { CustomListItem } from '@/components/shared/CustomListItem';
 import { servicoService } from '@/services/supabase/servicoService';
 import { ServicoCardHorizontal } from '@/components/shared/ServicoCardHorizontal';
@@ -92,7 +92,7 @@ const PerfilProfissional = ({ route }: any) => {
         const getHorarioFuncionamento = async () => {
             if (profissionalData?.id) {
                 const result = await agendaService.getByProfissionalId(profissionalData.id);
-                
+
                 setHorarioFuncionamentoData(result);
             }
         }
@@ -184,10 +184,18 @@ const PerfilProfissional = ({ route }: any) => {
 
                                 {horarioFuncionamentoData.length > 0 && (
                                     <List.Section>
-                                        <List.Accordion title='Horário de Funcionamento'    >
-                                            {horarioFuncionamentoData.map(horarioFuncionamento => (
-                                                <HorarioFuncionamentoItem key={horarioFuncionamento.id} data={horarioFuncionamento} />
-                                            ))}
+                                        <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold, marginBottom: 5 }}>Horário de funcionamento</Text>
+                                        <List.Accordion title={
+                                            <HorarioFuncionamentoItem data={horarioFuncionamentoData.filter(horarioFuncionamento => horarioFuncionamento.dia_semana === new Date().getDay())[0]} key={horarioFuncionamentoData.filter(horarioFuncionamento => horarioFuncionamento.dia_semana === new Date().getDay())[0].id} />
+                                        } >
+                                            {horarioFuncionamentoData.map(horarioFuncionamento => {
+                                                if (horarioFuncionamento.id != horarioFuncionamentoData.filter(horarioFuncionamento => horarioFuncionamento.dia_semana === new Date().getDay())[0].id) {
+                                                    return (
+                                                        <HorarioFuncionamentoItem key={horarioFuncionamento.id} data={horarioFuncionamento} />
+                                                    )
+                                                }
+
+                                            })}
                                         </List.Accordion>
                                     </List.Section>
                                 )}
@@ -244,8 +252,8 @@ const PerfilProfissional = ({ route }: any) => {
                                                 )
                                             }
 
-                                            if(info === 'clientes_atendidos'){
-                                                return(
+                                            if (info === 'clientes_atendidos') {
+                                                return (
                                                     <CustomListItem text={`Mais de ${profissionalData.outras_informacoes[info]} clientes atendidos`} />
                                                 )
                                             }

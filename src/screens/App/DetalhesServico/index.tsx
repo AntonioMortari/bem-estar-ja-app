@@ -19,6 +19,7 @@ import { ServicoCard } from '@/components/shared/ServicoCard';
 import { avaliacaoService } from '@/services/supabase/avaliacaoService';
 import { favoritoService } from '@/services/supabase/favoritoService';
 import { useAuth } from '@/hooks/useAuth';
+import { TituloSecao } from '@/components/shared/TituloSecao';
 
 
 
@@ -246,7 +247,12 @@ const DetalhesServico = ({ route }: any) => {
 
                             {servicosSemelheantes.length > 0 && (
                                 <View style={styles.secao}>
-                                    <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Serviços Semelheantes</Text>
+                                    {/* <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Serviços Semelheantes</Text> */}
+
+                                    <TituloSecao
+                                        titulo='Serviços Semelheantes'
+                                        showButton={false}
+                                    />
 
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                                         {servicosSemelheantes.map(servico => {
@@ -254,10 +260,12 @@ const DetalhesServico = ({ route }: any) => {
                                                 return <ServicoCard
                                                     data={servico}
                                                     key={servico.id}
+                                                    onPress={() => {
+                                                        navigator.goBack();
+                                                        navigator.navigate('DetalhesServico', { idServico: servico.id })
+                                                    }}
                                                 />
                                             }
-
-
                                         })}
                                     </ScrollView>
                                 </View>
