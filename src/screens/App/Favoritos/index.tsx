@@ -2,10 +2,25 @@ import { SafeAreaView, View } from "react-native";
 import { theme } from "@/theme/paper";
 import { Searchbar, Text, SegmentedButtons } from "react-native-paper";
 import { styles } from "./styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+// import { ProfissionalCardHorizontal } from "@/components/shared/ProfissionalCardHorizontal";
+import { ServicoCardHorizontal } from "@/components/shared/ServicoCardHorizontal";
+import { IServicoFull } from "@/@types/databaseTypes";
 
 const Favoritos = () => {
   const [value, setValue] = useState<string>('servicos');
+
+  const [servicos, setServicos] = useState<IServicoFull[]>([]);
+
+  const ServicoCardHorizontal = async () => {}
+
+
+
+  //   useEffect(() => {
+      
+  //   }, [])
+  // }
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -41,6 +56,31 @@ const Favoritos = () => {
           }
         ]}
       />
+
+      <View>
+
+        {/* <ServicoCardHorizontal data={}/> */}
+
+      </View>
+
+      {/* <View>
+
+        <ProfissionalCardHorizontal />
+     
+      </View> */}
+
+
+      
+
+
+        {/* titulo da categoia */}
+      {value === 'servicos' ? (
+        <View>
+          <Text>Serviços</Text>
+        </View>
+      ) : (
+        <Text>Profissionais</Text>
+      )}
 
     </View>
 
