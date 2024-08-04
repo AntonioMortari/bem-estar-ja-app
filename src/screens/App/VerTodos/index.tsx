@@ -37,7 +37,6 @@ const VerTodos = ({ route }: any) => {
     const [todosServicos, setTodosServicos] = useState<IServicoFull[]>([]);
 
     const getTodos = async () => {
-        console.log('Passou')
         if (categoriaNome === 'Profissionais perto de você') {
             const result = await profissionalService.getAll();
             setTodosProfissionais(result);

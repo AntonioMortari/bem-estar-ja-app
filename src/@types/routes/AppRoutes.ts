@@ -9,6 +9,8 @@ export type TAppClienteRoutes = {
     DetalhesServico: { idServico: number };
     VerTodos: { categoriaNome: TCategoriaNomeVerTodos, cidade: string, estado: string };
     NovoEndereco: undefined;
+
+    AgendarServico: { idServico: number }
 }
 
 export type TAppClienteMainTabsRoutes = {

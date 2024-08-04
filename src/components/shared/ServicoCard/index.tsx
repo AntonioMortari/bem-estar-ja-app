@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Button, Card, Text, TouchableRipple } from 'react-native-paper';
 
 import { IServicoFull } from '@/@types/databaseTypes';
+import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 import { styles } from './styles';
 import { IconWithLabel } from '../IconLabel';
 import { theme } from '@/theme/paper';
@@ -11,7 +12,6 @@ import { theme } from '@/theme/paper';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 
 
 interface IServicoCardProps {
@@ -24,6 +24,10 @@ const ServicoCard = ({ data, onPress }: IServicoCardProps) => {
 
     const goToDetalhesServico = () => {
         navigation.navigate('DetalhesServico', { idServico: data.id })
+    }
+
+    const goToAgendarServico = () => {
+        navigation.navigate('AgendarServico', { idServico: data.id })
     }
 
     return (
@@ -64,7 +68,7 @@ const ServicoCard = ({ data, onPress }: IServicoCardProps) => {
                     {/* container botões */}
                     <View style={{ marginTop: 15, flexDirection: 'row', gap: 10, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                         <Button mode='outlined' onPress={() => onPress ? onPress() : goToDetalhesServico()}>Detalhes</Button>
-                        <Button mode='contained'>Agendar</Button>
+                        <Button mode='contained' onPress={goToAgendarServico}>Agendar</Button>
                     </View>
 
 
