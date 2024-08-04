@@ -13,7 +13,15 @@ import { IconWithLabel } from '@/components/shared/IconLabel';
 // icons
 import { FontAwesome6 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import Stars from '@/components/shared/Stars';
+
+import { Calendar, CalendarProvider, ExpandableCalendar, LocaleConfig, WeekCalendar } from 'react-native-calendars';
+import CalendarStrip from 'react-native-calendar-strip'
+import { utils } from '@/utils';
+
+LocaleConfig.locales['pt-br'] = utils.ptBR;
+LocaleConfig.defaultLocale = 'pt-br';
 
 
 
@@ -63,13 +71,13 @@ const AgendarServico = ({ route }: any) => {
                     <AntDesign name="arrowleft" size={30} color={theme.colors.dark} />
                 </TouchableRipple>
 
-                <Text variant='headlineSmall'>Confirmar Agendamento</Text>
+                <Text variant='headlineSmall'>Agendar Serviço</Text>
             </View>
 
             <View style={styles.containerServicoData}>
 
                 <View style={styles.containerServicoNomeFoto}>
-                    <View style={{borderRadius: 16}}>
+                    <View style={{ borderRadius: 16 }}>
                         <Image
                             source={{ uri: servicoData?.foto }}
                             style={styles.imagem}
@@ -110,6 +118,11 @@ const AgendarServico = ({ route }: any) => {
             </View>
 
             <Button style={styles.buttonDetalhes} onPress={gotToDetalhesServico} mode='outlined'>Detalhes</Button>
+
+            <View style={styles.containerButtons}>
+                <Button style={{ width: '40%' }} onPress={() => navigator.goBack()} mode='outlined'>Cancelar</Button>
+                <Button style={{ width: '40%' }} mode='contained'>Agendar</Button>
+            </View>
 
         </ScrollView>
 

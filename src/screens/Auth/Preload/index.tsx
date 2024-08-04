@@ -30,7 +30,8 @@ const Preload = () => {
                     setIsAuth(true);
                     setUserData({
                         id: session.user.id,
-                        accessToken: session.access_token
+                        accessToken: session.access_token,
+                        email: session.user.email
                     });
                     setClienteData(clienteData);
                     return;

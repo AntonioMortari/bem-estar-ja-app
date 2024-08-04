@@ -12,10 +12,14 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Octicons from '@expo/vector-icons/Octicons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
+import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 
 
 const Perfil = () => {
     const { handleLogout, clienteData, userData } = useAuth();
+
+    const navigator = useNavigation<TAppClienteNavigationRoutes>();
 
 
 
@@ -47,35 +51,36 @@ const Perfil = () => {
                 <PerfilLinkItem
                     label='Informações Pessoais'
                     icon={<Ionicons name="person" size={24} color={theme.colors.primary} />}
-                    rota=''
+                    onPress={() => navigator.navigate('InformacoesPessoais')}
                 />
 
-                <PerfilLinkItem
+                {/* <PerfilLinkItem
                     label='Dados de Acesso'
                     icon={<MaterialCommunityIcons name="key" size={24} color={theme.colors.primary} />}
-                    rota=''
-                />
+                    onPress={() => navigator.navigate('DadosAcesso')}
+                /> */}
 
                 <PerfilLinkItem
                     label='Endereços'
                     icon={<Octicons name="home" size={24} color={theme.colors.primary} />}
-                    rota=''
+                    onPress={() => navigator.navigate('Enderecos')}
                 />
 
                 <PerfilLinkItem
                     label='Perguntas Frequentes'
                     icon={<AntDesign name="questioncircleo" size={24} color={theme.colors.primary} />}
-                    rota=''
+                    onPress={() => navigator.navigate('PerguntasFrequentes')}
                 />
 
                 <PerfilLinkItem
                     label='Ajuda e Suporte'
                     icon={<MaterialIcons name="support-agent" size={24} color={theme.colors.primary} />}
-                    rota=''
+                    onPress={() => console.log('')}
+                    
                 />
             </View>
 
-            <Button mode='outlined' style={{ width: '90%', margin: 'auto', marginTop: 30 }}>Sair</Button>
+            <Button mode='outlined' style={{ width: '90%', margin: 'auto', marginTop: 30 }} onPress={handleLogout}>Sair</Button>
 
             <Text variant='bodySmall' style={styles.legenda}>Desenvolvido por @Antonio Mortari
                 Idealizado por Camila Anjo e Karina Teles

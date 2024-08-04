@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container:{
         paddingHorizontal: 20,
-        marginTop: 30
+        marginTop: 30,
     },
 
     header:{
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     containerIcons: {
         gap: 6,
         alignItems: 'flex-start',
+        marginVertical: 15
     },
 
     imagem:{
@@ -39,7 +40,17 @@ const styles = StyleSheet.create({
     },
 
     buttonDetalhes:{
-        marginVertical: 10
+        marginVertical: 10,
+        width: 150
+    },
+
+    containerButtons:{
+        flexDirection: 'row',
+        width: '100%',
+        gap: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 30
     }
 })
 

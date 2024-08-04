@@ -4,17 +4,21 @@ import { Divider, Text, TouchableRipple } from 'react-native-paper';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { ReactNode } from 'react';
 import { theme } from '@/theme/paper';
+import { useNavigation } from '@react-navigation/native';
+import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 
 interface IPerfilLinkItemProps {
     icon: ReactNode;
     label: string;
-    rota: string;
+    onPress: () => void;
 }
 
-const PerfilLinkItem = ({ icon, label, rota }: IPerfilLinkItemProps) => {
+const PerfilLinkItem = ({ icon, label, onPress }: IPerfilLinkItemProps) => {
+    const navigator = useNavigation<TAppClienteNavigationRoutes>();
+
     return (
         <>
-            <TouchableRipple onPress={() => console.log('')} style={styles.container}>
+            <TouchableRipple onPress={onPress} style={styles.container}>
                 <>
                     <View style={{ alignItems: 'center', gap: 10, flexDirection: 'row' }}>
                         {icon}
@@ -26,7 +30,7 @@ const PerfilLinkItem = ({ icon, label, rota }: IPerfilLinkItemProps) => {
                 </>
             </TouchableRipple>
 
-            <Divider   />
+            <Divider />
         </>
     );
 }

@@ -36,6 +36,8 @@ const cadastrar = async (email: string, senha: string) => {
         password: senha
     });
 
+    
+
     if(error){
         console.log('ERRO AO FAZER CADASTRO: ', error);
         return error.message;

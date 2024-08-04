@@ -278,7 +278,9 @@ const DetalhesServico = ({ route }: any) => {
                     <View style={styles.footer}>
                         <Text variant='titleLarge'>R${servicoData?.procedimento.preco}</Text>
 
-                        <Button mode='contained'>Agendar</Button>
+                        {servicoData && (
+                            <Button onPress={() => navigator.navigate('AgendarServico', { idServico: servicoData.id })} mode='contained'>Agendar</Button>
+                        )}
                     </View>
                 </>
             )}

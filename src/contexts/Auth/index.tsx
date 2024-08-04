@@ -34,7 +34,7 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
         }
 
         // buscar os dados do cliente
-        const clienteData = await clienteService.getById(result.user.id);   
+        const clienteData = await clienteService.getById(result.user.id);
 
         if (clienteData != null) {
 
@@ -42,7 +42,8 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
             setIsAuth(true);
             setUserData({
                 id: result.user.id,
-                accessToken: result.session.access_token
+                accessToken: result.session.access_token,
+                email: result.user.email
             });
             setClienteData(clienteData);
         } else {
@@ -149,10 +150,11 @@ const AuthContextProvider = ({ children }: IAuthContextProvider) => {
             setIsAuth(true);
             setUserData({
                 accessToken: result.session.access_token,
-                id: result.user.id
+                id: result.user.id,
+                email: result.user.email
 
             });
-            setClienteData({...clienteData, enderecos});
+            setClienteData({ ...clienteData, enderecos });
             return;
         } else {
             notify('error', {

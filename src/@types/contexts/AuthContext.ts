@@ -10,6 +10,7 @@ export interface IAuthContextProvider {
 export interface IUserData {
     id: string;
     accessToken: string;
+    email?: string;
 }
 
 export interface IAuthContextValues {

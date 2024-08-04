@@ -26,4 +26,11 @@ const cadastro3Schema = z.object({
     senha: z.string({ message: 'Campo obrigatório' }).trim().min(6, { message: 'A senha deve ter no mínimo 6 caracteres' }),
 });
 
-export { loginSchema, cadastro1Schema, cadastro2Schema, cadastro3Schema };
+const informacoesPessoaisSchema = z.object({
+    nome: z.string({ message: 'Campo Obrigatório' }).trim().min(1, 'Campo Obrigatório'),
+    // senha: z.string({ message: 'Campo obrigatório' }).trim().min(6, { message: 'A senha deve ter no mínimo 6 caracteres' }),
+    // email: z.string({ message: 'Campo Obrigatório' }).min(1, 'Campo Obrigatório').trim().email({ message: 'Insira um email válido' }),
+
+});
+
+export { loginSchema, cadastro1Schema, cadastro2Schema, cadastro3Schema, informacoesPessoaisSchema };

@@ -1,6 +1,7 @@
 import { ICliente, IClienteFull, Tabelas } from '@/@types/databaseTypes';
 import { supabase } from '.';
 import { enderecoService } from './enderecoService';
+import { notify } from 'react-native-notificated';
 
 
 const getById = async (id: string): Promise<IClienteFull | null> => {
@@ -12,7 +13,7 @@ const getById = async (id: string): Promise<IClienteFull | null> => {
 
     const enderecos = await enderecoService.getEnderecoByUsuarioId(id);
 
-    if(!enderecos){
+    if (!enderecos) {
         return null;
     }
 
@@ -21,7 +22,7 @@ const getById = async (id: string): Promise<IClienteFull | null> => {
         return null;
     }
 
-    return {...data, enderecos};
+    return { ...data, enderecos };
 }
 
 const getByCPF = async (cpf: string): Promise<ICliente | string | null> => {
@@ -55,8 +56,22 @@ const create = async (clienteData: ICliente): Promise<ICliente | string> => {
 
 }
 
+const update = async (id: string, clienteData: Partial<ICliente>) => {
+    const { error, data } = await supabase
+        .from(Tabelas.clientes)
+        .update(clienteData)
+        .eq('id', id)
+
+    if (error) {
+        console.log('ERRO AO ATUALIZAR OS DADOS DO CLIENTE: ', error);
+        return error.message;
+    }
+
+}
+
 export const clienteService = {
     getById,
     create,
-    getByCPF
+    getByCPF,
+    update
 }
