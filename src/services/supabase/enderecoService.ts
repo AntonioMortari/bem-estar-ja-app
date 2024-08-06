@@ -3,9 +3,9 @@ import { supabase } from '.';
 import { getCurrentPositionAsync, requestForegroundPermissionsAsync } from 'expo-location';
 import axios from 'axios';
 
-interface IOpenStreetMapResponse{
+interface IOpenStreetMapResponse {
     // resposta ao buscar endereço por coordenadas
-    address:{
+    address: {
         city: string; //cidade
         'ISO3166-2-lvl4': string; //estado
     }
@@ -52,7 +52,7 @@ const getPermissaoLocalizacao = async (): Promise<boolean> => {
     return false;
 }
 
-const getCidadeEstadoByCoordenadas = async (): Promise<{cidade: string, estado: string} | null> => {
+const getCidadeEstadoByCoordenadas = async (): Promise<{ cidade: string, estado: string } | null> => {
     const permissao = await getPermissaoLocalizacao();
 
     if (permissao) {
@@ -60,14 +60,14 @@ const getCidadeEstadoByCoordenadas = async (): Promise<{cidade: string, estado: 
 
         const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${posicaoAtual.coords.latitude}&lon=${posicaoAtual.coords.longitude}`;
 
-        try{
+        try {
             const { data: { address } } = await axios.get<IOpenStreetMapResponse>(url);
 
-            return{
+            return {
                 cidade: address.city,
                 estado: address['ISO3166-2-lvl4'].split('-')[1]
             }
-        }catch(err){
+        } catch (err) {
             console.log('ERRO AO BUSCAR CIDADE E ENDEREÇO POR COORDENADAS: ', err);
             return null
         }
@@ -77,9 +77,21 @@ const getCidadeEstadoByCoordenadas = async (): Promise<{cidade: string, estado: 
     return null;
 }
 
+const deleteById = async (id: string) => {
+    const { error } = await supabase
+        .from(Tabelas.enderecos)
+        .delete()
+        .eq('id', id);
+
+    if(error){
+        console.log('ERRO AO EXCLUIR ENDEREÇO POR ID: ', error);
+    }
+}
+
 
 export const enderecoService = {
     create,
     getEnderecoByUsuarioId,
-    getCidadeEstadoByCoordenadas
+    getCidadeEstadoByCoordenadas,
+    deleteById
 };
