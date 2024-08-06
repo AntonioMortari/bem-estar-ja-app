@@ -12,8 +12,8 @@ import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 
 interface IPerfilLayoutProps {
     titulo: string;
-    descricao: string;
-    children: ReactNode
+    descricao?: string;
+    children?: ReactNode
 }
 
 const TelasPerfilLayout = ({ children, titulo, descricao }: IPerfilLayoutProps) => {
