@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCadastro } from '@/hooks/useCadastro';
 import { theme } from '@/theme/paper';
 import { TAuthClienteNavigationRoutes } from '@/@types/routes/AuthRoutes';
+import { notify } from 'react-native-notificated';
 
 type TCadastro2Form = z.infer<typeof cadastro2Schema>;
 
@@ -37,7 +38,12 @@ const Cadastro2 = () => {
         const endereco = await utils.getEnderecoByCEP(cep);
 
         if (typeof endereco === 'string') {
-            console.log('CEP inválido!');
+            notify('error', {
+                params:{
+                    title: 'Erro',
+                    description: 'Digite um CEP válido!'
+                }
+            });
         } else {
             setValue('logradouro', endereco.logradouro);
             setValue('cidade', endereco.localidade);

@@ -41,6 +41,13 @@ export default function App() {
         descriptionFamily: 'Montserrat_400Regular',
         accentColor: theme.colors.warning,
         leftIconSource: <AntDesign name="warning" size={24} color={theme.colors.warning} />,
+      },
+      successConfig:{
+        titleColor: theme.colors.dark,
+        titleFamily: 'Montserrat_600SemiBold',
+        descriptionFamily: 'Montserrat_400Regular',
+        accentColor: theme.colors.success,
+        leftIconSource: <AntDesign name="checkcircleo" size={24} color={theme.colors.success} />
       }
     }
   });

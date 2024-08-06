@@ -21,6 +21,16 @@ const cadastro2Schema = z.object({
     bairro: z.string({ message: 'Campo obrigatório' }).trim().min(1, { message: 'Campo obrigatório' }),
 });
 
+const novoEnderecoSchema = z.object({
+    cep: z.string({ message: 'Campo obrigatório' }).trim().min(1, { message: 'Campo obrigatório' }),
+    logradouro: z.string({ message: 'Campo obrigatório' }).min(1, { message: 'Campo obrigatório' }),
+    cidade: z.string({ message: 'Campo obrigatório' }).trim().min(1, { message: 'Campo obrigatório' }),
+    estado: z.string({ message: 'Campo obrigatório' }).trim().min(1, { message: 'Campo obrigatório' }),
+    numero: z.string({ message: 'Campo obrigatório' }).trim().min(1, { message: 'Campo obrigatório' }),
+    complemento: z.string().trim().optional(),
+    bairro: z.string({ message: 'Campo obrigatório' }).trim().min(1, { message: 'Campo obrigatório' }),
+});
+
 const cadastro3Schema = z.object({
     email: z.string({ message: 'Campo obrigatório' }).trim().email({ message: 'Digite um email válido' }),
     senha: z.string({ message: 'Campo obrigatório' }).trim().min(6, { message: 'A senha deve ter no mínimo 6 caracteres' }),
@@ -33,4 +43,4 @@ const informacoesPessoaisSchema = z.object({
 
 });
 
-export { loginSchema, cadastro1Schema, cadastro2Schema, cadastro3Schema, informacoesPessoaisSchema };
+export { loginSchema, cadastro1Schema, cadastro2Schema, cadastro3Schema, informacoesPessoaisSchema, novoEnderecoSchema };

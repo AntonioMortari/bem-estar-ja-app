@@ -3,20 +3,47 @@ import { Pressable, View } from 'react-native';
 import { styles } from './styles';
 import { useEffect, useState } from "react";
 import { Button, Dialog, Divider, Portal, Text } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { TAppClienteNavigationRoutes } from "@/@types/routes/AppRoutes";
 import { useAuth } from "@/hooks/useAuth";
 import Feather from '@expo/vector-icons/Feather';
 import { theme } from "@/theme/paper";
+import { IEndereco } from "@/@types/databaseTypes";
+import { enderecoService } from "@/services/supabase/enderecoService";
+import { notify } from "react-native-notificated";
 
 
 
 const Enderecos = () => {
     const { clienteData } = useAuth();
+    const [enderecos, setEnderecos] = useState<IEndereco[]>([]);
 
     const [dialogIsVisible, setDialogIsVisible] = useState<boolean>(false);
 
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
+
+    useFocusEffect(() => {
+        const getEnderecos = async() => {
+            if(clienteData){
+                const result = await enderecoService.getEnderecoByUsuarioId(clienteData.id);
+
+                if(!result){
+                    notify('error', {
+                        params: {
+                            title: 'Algo deu errado',
+                            description: 'Tente novamente mais tarde'
+                        }
+                    });
+
+                    return;
+                }
+
+                setEnderecos(result);
+            }
+        }
+
+        getEnderecos();
+    })
 
     const excluirEndereco = async (idEndereco: string) => {
 
@@ -45,15 +72,15 @@ const Enderecos = () => {
             </Portal>
 
             <>
-                {clienteData?.enderecos && clienteData?.enderecos.length > 0 ? (
+                {clienteData?.enderecos && enderecos.length > 0 ? (
                     <>
                         <View style={styles.containerEnderecos}>
 
-                            {clienteData?.enderecos.map(endereco => (
-                                <>
+                            {enderecos.map(endereco => (
+                                <View key={endereco.id}>
                                     <View style={styles.enderecoItemContainer}>
                                         <View>
-                                            <Text variant='titleMedium' numberOfLines={1} style={{ width: '80%' }}>{endereco.logradouro}</Text>
+                                            <Text variant='titleMedium' numberOfLines={1} style={{ maxWidth: '90%' }}>{endereco.logradouro}</Text>
                                             <Text variant='titleMedium'>{endereco.cep}</Text>
                                             <Text variant='titleMedium'>{endereco.cidade}, {endereco.estado}</Text>
                                         </View>
@@ -66,7 +93,7 @@ const Enderecos = () => {
                                     </View>
 
                                     <Divider />
-                                </>
+                                </View>
                             ))}
 
                         </View>
@@ -77,7 +104,7 @@ const Enderecos = () => {
                     </>
                 )}
 
-                <Button mode="outlined" onPress={() => navigator.navigate('NovoEndereco')}>Cadastrar novo endereço</Button>
+                <Button style={{marginBottom: 30}} mode="outlined" onPress={() => navigator.navigate('NovoEndereco')}>Cadastrar novo endereço</Button>
             </>
         </TelasPerfilLayout>
     );

@@ -24,10 +24,6 @@ const Perfil = () => {
 
 
     return (
-        // <>
-        // <Text variant='titleLarge'>Perfil</Text>
-        // <Button mode="contained" onPress={handleLogout}>Sair</Button>
-        // </>
         <View>
 
             <View style={styles.header}>

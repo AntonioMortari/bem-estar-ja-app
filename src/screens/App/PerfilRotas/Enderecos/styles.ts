@@ -9,7 +9,9 @@ const styles = StyleSheet.create({
     enderecoItemContainer:{
         padding: 10,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20
     }
 })
 

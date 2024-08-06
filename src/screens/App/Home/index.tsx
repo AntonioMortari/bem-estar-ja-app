@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { ActivityIndicator, Button, Searchbar, Text, TouchableRipple } from 'react-native-paper';
 
-import { IProfissionalFull, IServicoFull } from '@/@types/databaseTypes';
+import { IEndereco, IProfissionalFull, IServicoFull } from '@/@types/databaseTypes';
 import { TAppClienteNavigationRoutes } from '@/@types/routes/AppRoutes';
 import { ServicoCard } from '@/components/shared/ServicoCard';
 import { TituloSecao } from '@/components/shared/TituloSecao';
@@ -29,6 +29,7 @@ export interface ICidadeEstadoAtual {
 const Home = () => {
     const navigation = useNavigation<TAppClienteNavigationRoutes>();
     const { clienteData, handleLogout } = useAuth();
+    const [enderecoscliente, setEnderecosCliente] = useState<IEndereco[]>([]);
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [valorBusca, setValorBusca] = useState<string>('');
@@ -96,10 +97,10 @@ const Home = () => {
             if (clienteData) {
                 // se não for possível buscar a localização atual, atualiza o estado: cidadeEstadoAtual com o primeiro endereço da lista de endereços cadastrados
                 setCidadeEstadoAtual({
-                    cidade: clienteData.enderecos[0].cidade,
-                    estado: clienteData.enderecos[0].estado
+                    cidade: enderecoscliente[0].cidade,
+                    estado: enderecoscliente[0].estado
                 });
-                setLocalizacaoValue(clienteData.enderecos[0].id); // muda o radio selecionado
+                setLocalizacaoValue(enderecoscliente[0].id); // muda o radio selecionado
             }
             setLocalizacaoIsLoading(false);
         }
@@ -136,7 +137,7 @@ const Home = () => {
             }
         } else {
             // se o usuário selecionou um radio de endereço
-            const enderecoSelecionado = clienteData?.enderecos.filter(endereco => endereco.id === value)[0];
+            const enderecoSelecionado = enderecoscliente.filter(endereco => endereco.id === value)[0];
 
             // atualiza o estado: cidadeEstadoAtual com as informações do endereço selecionado
             if (enderecoSelecionado) {
@@ -154,6 +155,19 @@ const Home = () => {
         navigation.navigate('Busca');
     }
 
+    useEffect(() => {
+        const getEnderecos = async () => {
+            if (clienteData) {
+                const result = await enderecoService.getEnderecoByUsuarioId(clienteData.id);
+
+                if (result) {
+                    setEnderecosCliente(result);
+                }
+            }
+        }
+
+        getEnderecos();
+    }, [clienteData])
 
     return (
         <ScrollView>
@@ -161,7 +175,6 @@ const Home = () => {
                 {/* Modal de selecionar endereço */}
                 <DialogEnderecos
                     isVisible={dialogIsVisible}
-                    enderecos={clienteData?.enderecos}
                     onDimiss={() => setDialogIsVisible(false)}
                     onValueChange={handleLocalizacaoValue}
                     value={localizacaoValue}
