@@ -6,6 +6,7 @@ import { TAppClienteRoutes } from '@/@types/routes/AppRoutes';
 import { VerTodos } from '@/screens/App/VerTodos';
 import { AgendarServico } from '@/screens/App/AgendarServico';
 import { InformacoesPessoais } from '@/screens/App/PerfilRotas/InformacoesPessoais';
+import { PerguntasFrequesntes } from '@/screens/App/PerfilRotas/PerguntasFrequentes';
 
 const Stack = createStackNavigator<TAppClienteRoutes>();
 
@@ -19,7 +20,7 @@ const AppClienteRoutes = () => {
             {/* rotas de perfil */}
             <Stack.Screen name='InformacoesPessoais' component={InformacoesPessoais} />
             <Stack.Screen name='Enderecos' component={() => <></>} />
-            <Stack.Screen name='PerguntasFrequentes' component={() => <></>} />
+            <Stack.Screen name='PerguntasFrequentes' component={PerguntasFrequesntes} />
 
             <Stack.Screen name='PerfilProfissional' component={PerfilProfissional} options={{ headerMode: 'screen', headerShown: false }} />
             <Stack.Screen name='DetalhesServico' component={DetalhesServico} />

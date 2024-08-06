@@ -1,6 +1,6 @@
 import { useAuth } from '@/hooks/useAuth';
 import { Avatar, Button, Text } from 'react-native-paper';
-import { View } from 'react-native';
+import { Linking, View } from 'react-native';
 import { styles } from './styles';
 import { format } from 'date-fns';
 import { theme } from '@/theme/paper';
@@ -75,7 +75,9 @@ const Perfil = () => {
                 <PerfilLinkItem
                     label='Ajuda e Suporte'
                     icon={<MaterialIcons name="support-agent" size={24} color={theme.colors.primary} />}
-                    onPress={() => console.log('')}
+                    onPress={async() => {
+                        await Linking.openURL('https://wa.me/5519992276384?text=Olá,%20preciso%20de%20ajuda.')
+                    }}
                     
                 />
             </View>
