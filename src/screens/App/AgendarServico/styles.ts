@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container:{
         paddingHorizontal: 20,
-        marginTop: 30,
+        marginVertical: 30,
     },
 
     header:{
@@ -51,6 +51,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 30
+    },
+
+    containerHorarios:{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 25,
+        marginTop: 20
     }
 })
 

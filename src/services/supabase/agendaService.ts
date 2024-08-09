@@ -7,7 +7,7 @@ const getByProfissionalId = async (profissionalId: number): Promise<IAgenda[]> =
         .from(Tabelas.agenda)
         .select('*')
         .eq('profissional_id', profissionalId)
-        .order('dia_semana', { ascending: true})
+        .order('dia_semana', { ascending: true })
         .returns<IAgenda[]>();
 
     if (error) {
@@ -18,7 +18,25 @@ const getByProfissionalId = async (profissionalId: number): Promise<IAgenda[]> =
     return data || [];
 }
 
+const getByDiaSemana = async (profissionalId: number, diaSemana: number) => {
+    const { data, error } = await supabase
+        .from(Tabelas.agenda)
+        .select('*')
+        .eq('profissional_id', profissionalId)
+        .eq('dia_semana', diaSemana)
+        .single<IAgenda>();
+
+    if(error){
+        console.log('ERRO AO BUSCAR AGENDA POR DIA DA SEMANA: ', error);
+        return null;
+    }
+
+    return data;
+
+
+}
 
 export const agendaService = {
-    getByProfissionalId
+    getByProfissionalId,
+    getByDiaSemana
 }
