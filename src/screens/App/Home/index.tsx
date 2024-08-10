@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 import { ActivityIndicator, Button, Searchbar, Text, TouchableRipple } from 'react-native-paper';
 
 import { IEndereco, IProfissionalFull, IServicoFull } from '@/@types/databaseTypes';
@@ -53,7 +53,7 @@ const Home = () => {
             // busca os dados quando o estado: cidadeEstadoAtual muda
 
             if (cidadeEstadoAtual?.cidade && cidadeEstadoAtual.estado) {
-                const profissionaisData = await profissionalService.getAll();
+                const profissionaisData = await profissionalService.getByCidadeEstado(cidadeEstadoAtual.cidade, cidadeEstadoAtual.estado);
                 if (typeof profissionaisData != 'string') {
                     setProfissionais(profissionaisData);
                 }
@@ -228,8 +228,18 @@ const Home = () => {
             ) : (
                 <>
                     {servicosEmDestaque.length === 0 && servicosNovidades.length === 0 && profissionais.length === 0 ? (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 30, paddingHorizontal: 10 }}>
-                            <Text variant='titleLarge'>Desculpe. Não encontramos nenhum serviço ou profissional em sua região.</Text>
+                        <View style={{ gap: 20, alignItems: 'center', justifyContent: 'center', marginTop: 20, height: '100%' }}>
+
+                            <View style={{ alignItems: 'center', gap: 10 }}>
+                                <Text style={{ fontFamily: theme.fonts.semibold, textAlign: 'center', paddingHorizontal: 20 }}>Desculpe, não encontramos nenhum serviço ou profissional na sua região</Text>
+
+                                <Button mode='text' onPress={handleCidadeEstadoAtual}>Tente outro endereço</Button>
+                            </View>
+
+                            <Image
+                                source={require('@/images/no-results-search.png')}
+                                style={{ width: 300, height: 300 }}
+                            />
                         </View>
                     ) : (
                         <View style={styles.containerSecoes}>

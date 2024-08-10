@@ -54,8 +54,12 @@ const styles = StyleSheet.create({
         marginVertical: 30
     },
     mapa:{
-        
-    }
+        height: 200,
+        width: '100%',
+        borderRadius: 8,
+        borderColor: theme.colors.gray,
+        borderWidth: 0.5
+    },
 })
 
 export { styles };

@@ -1,10 +1,10 @@
 
 
-export enum Tabelas{
+export enum Tabelas {
     agenda = 'agenda',
     agendamento = 'agendamento',
     area_atuacao = 'area_atuacao',
-    avaliacoes= 'avaliacoes',
+    avaliacoes = 'avaliacoes',
     clientes = 'clientes',
     enderecos = 'enderecos',
     procedimentos = 'procedimentos',
@@ -13,19 +13,19 @@ export enum Tabelas{
     favoritos = 'favoritos'
 }
 
-export interface ICliente{
+export interface ICliente {
     id: string;
     cpf: string;
     nome: string;
     data_nascimento: Date;
     foto_perfil?: string;
-    genero: 'F' | 'M' | 'O' 
+    genero: 'F' | 'M' | 'O'
 }
-export interface IClienteFull extends ICliente{
-    enderecos:IEndereco[]
+export interface IClienteFull extends ICliente {
+    enderecos: IEndereco[]
 }
 
-export interface IEndereco{
+export interface IEndereco {
     id: string;
     cep: string;
     logradouro: string;
@@ -37,7 +37,7 @@ export interface IEndereco{
     usuario_id: string;
 }
 
-export interface IProfissional{
+export interface IProfissional {
     id: number;
     created_at: Date;
     nome: string;
@@ -49,30 +49,30 @@ export interface IProfissional{
     outras_informacoes: any;
 }
 
-export interface IProfissionalFull extends IProfissional{
+export interface IProfissionalFull extends IProfissional {
     area_atuacao: IAreaAtuacao;
     endereco: IEndereco;
 }
 
-export interface IAreaAtuacao{
+export interface IAreaAtuacao {
     id: number;
     nome: 'Estética' | 'Massoterapia' | 'Estética e Massoterapia'
 }
 
-export interface IProcedimento{
+export interface IProcedimento {
     id: number;
-    area_atuacao_id:number;
+    area_atuacao_id: number;
     nome: string;
     preco: number;
     duracao: number;
     descricao: string;
 }
 
-export interface IProcedimentoFull extends IProcedimento{
+export interface IProcedimentoFull extends IProcedimento {
     area_atuacao: IAreaAtuacao;
 }
 
-export interface IServicos{
+export interface IServicos {
     id: number;
     created_at: Date;
     procedimento_id: number;
@@ -81,13 +81,13 @@ export interface IServicos{
     avaliacao: number;
     foto: string;
 }
-export interface IServicoFull extends IServicos{
-    profissional:IProfissionalFull;
+export interface IServicoFull extends IServicos {
+    profissional: IProfissionalFull;
     procedimento: IProcedimentoFull;
     endereco: IEndereco;
 }
 
-export interface IAvaliacao{
+export interface IAvaliacao {
     id: string;
     cliente_id: string;
     avaliacao: string;
@@ -96,7 +96,7 @@ export interface IAvaliacao{
     created_at: Date;
 }
 
-export interface IAvaliacaoFull{
+export interface IAvaliacaoFull {
     id: string;
     cliente: ICliente;
     avaliacao: string;
@@ -105,7 +105,7 @@ export interface IAvaliacaoFull{
     created_at: Date;
 }
 
-export interface IFavorito{
+export interface IFavorito {
     id?: string;
     usuario_id: string;
     tipo_favorito_id: 1 | 2;
@@ -114,7 +114,7 @@ export interface IFavorito{
 
 }
 
-export interface IFotosProfissionais{
+export interface IFotosProfissionais {
     id: number;
     usuario_id: string;
     foto: string;
@@ -126,4 +126,20 @@ export interface IAgenda {
     dia_semana: number;
     hora_inicio: string;
     hora_fim: string;
+}
+
+export interface IAgendamento {
+    id: number;
+    created_at: Date;
+    profissional_id: number;
+    cliente_id: string;
+    data_hora_inicio: Date;
+    data_hora_fim: Date;
+    status: number
+    servico_id: number
+}
+
+export interface IAgendamentoFull extends IAgendamento {
+    profissional: IProfissionalFull;
+    servico: IServicoFull;
 }

@@ -1,7 +1,7 @@
 import { IProfissionalFull, Tabelas } from "@/@types/databaseTypes";
 import { supabase } from ".";
 
-const joins = `area_atuacao:area_atuacao_id(*)`;
+const joins = `area_atuacao:area_atuacao_id(*), endereco:endereco_id(*)`;
 
 
 const getAll = async (): Promise<IProfissionalFull[]> => {

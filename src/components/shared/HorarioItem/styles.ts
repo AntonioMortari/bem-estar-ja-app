@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     },
 
     disabled: {
-        opacity: .8
+        opacity: .5
     }
 })
 

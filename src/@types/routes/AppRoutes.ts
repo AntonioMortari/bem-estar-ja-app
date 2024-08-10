@@ -6,6 +6,7 @@ export type TAppClienteRoutes = {
     MainTabs: undefined;
     PerfilProfissional: { idProfissional: number };
     DetalhesServico: { idServico: number };
+    DetalhesAgendamento: { idAgendamento: number }
     VerTodos: { categoriaNome: TCategoriaNomeVerTodos, cidade: string, estado: string };
 
     AgendarServico: { idServico: number }
@@ -27,7 +28,7 @@ export type TAppClienteMainTabsRoutes = {
 
 export type TAppClientePerfilRoutes = {
     // rotas do perfil
-    
+
 }
 
 export type TAppClienteNavigationRoutes = BottomTabNavigationProp<TAppClienteRoutes & TAppClienteMainTabsRoutes & TAppClientePerfilRoutes>

@@ -13,27 +13,32 @@ import { IconWithLabel } from '@/components/shared/IconLabel';
 // icons
 import { FontAwesome6 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
 import Stars from '@/components/shared/Stars';
 
 import { Calendar, CalendarProvider, ExpandableCalendar, LocaleConfig, WeekCalendar } from 'react-native-calendars';
 import CalendarStrip from 'react-native-calendar-strip'
 import { utils } from '@/utils';
 import { agendaService } from '@/services/supabase/agendaService';
-import { format } from 'date-fns';
+import { addMinutes, format } from 'date-fns';
 import DatePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { HorarioItem } from '@/components/shared/HorarioItem';
+import { agendamentoService } from '@/services/supabase/agendamentoService';
+import { useAuth } from '@/hooks/useAuth';
 
 LocaleConfig.locales['pt-br'] = utils.ptBR;
 LocaleConfig.defaultLocale = 'pt-br';
 
+interface IHorario {
+    horaInicio: string;
+    disponivel?: boolean;
+}
 
 const AgendarServico = ({ route }: any) => {
     const [servicoData, setServicoData] = useState<IServicoFull | null>(null);
     const [agendaProfissionalData, setAgendaProfissionalData] = useState<IAgenda | null>(null);
     const [dataSelecionada, setDataSelecionada] = useState<Date>(new Date());
     const [horarioSelecionado, setHorarioSelecionado] = useState<string>('');
-    const [horarios, setHorarios] = useState<string[]>([]);
+    const [horarios, setHorarios] = useState<IHorario[]>([]);
 
     const [showPicker, setShowPicker] = useState<boolean>(false);
     const [isLoadingHorario, setIsLoadingHorario] = useState<boolean>(true);
@@ -41,8 +46,10 @@ const AgendarServico = ({ route }: any) => {
 
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
 
+    const { clienteData } = useAuth();
+
     // Função para gerar horários disponíveis
-    function gerarHorarios(horaInicio: string, horaFim: string, intervaloMinutos: number) {
+    const gerarHorarios = async (horaInicio: string, horaFim: string, intervaloMinutos: number) => {
         let horarios = [];
         let horaAtual = new Date(`1970-01-01T${horaInicio}:00`);
         const fim = new Date(`1970-01-01T${horaFim}:00`);
@@ -52,8 +59,34 @@ const AgendarServico = ({ route }: any) => {
             horaAtual.setMinutes(horaAtual.getMinutes() + intervaloMinutos);
         }
 
-        return horarios;
+        // Use Promise.all para lidar com as promessas
+        const horariosResult = await Promise.all(
+            horarios.map(async (horario) => {
+                const dataHoraInicio = new Date(`${format(dataSelecionada, 'yyyy-MM-dd')}T${horario}:00.432Z`);
+                const dataHoraFim = addMinutes(dataHoraInicio, servicoData?.procedimento.duracao || 30);
+
+                if (servicoData) {
+                    const checarHorarioResult = await agendamentoService.checarHorario({
+                        dataHoraInicio,
+                        dataHoraFim,
+                        profissionalId: servicoData.profissional_id,
+                        servicoId: servicoData.id
+                    });
+
+                    if (checarHorarioResult.length > 0) {
+                        return { horaInicio: horario, disponivel: false };
+                    }
+
+                    return { horaInicio: horario, disponivel: true }
+
+                }
+                return { horaInicio: horario, disponivel: false };
+            })
+        );
+
+        return horariosResult;
     }
+
 
     useEffect(() => {
 
@@ -93,7 +126,8 @@ const AgendarServico = ({ route }: any) => {
 
                 if (result) {
                     setAgendaProfissionalData(result);
-                    setHorarios(gerarHorarios(result.hora_inicio, result.hora_fim, 60));
+                    const horariosResult = await gerarHorarios(result.hora_inicio, result.hora_fim, 60)
+                    setHorarios(horariosResult);
                 }
 
                 setIsLoadingHorario(false);
@@ -114,7 +148,43 @@ const AgendarServico = ({ route }: any) => {
             setDataSelecionada(newDate);
         }
         setShowPicker(false);
+
     };
+
+    const agendar = async () => {
+        const dataHoraInicio = new Date(`${format(dataSelecionada, 'yyyy-MM-dd')}T${horarioSelecionado}:00.432Z`);
+        const dataHoraFim = addMinutes(dataHoraInicio, servicoData?.procedimento.duracao || 30);
+
+        if (clienteData && servicoData) {
+            const result = await agendamentoService.create(
+                clienteData.id,
+                servicoData.profissional_id,
+                servicoData.id,
+
+                dataHoraInicio,
+                dataHoraFim
+            );
+
+            if (!result) {
+                notify('error', {
+                    params: {
+                        title: 'Erro ao criar agendamento',
+                        description: 'Tente novamente mais tarde'
+                    }
+                });
+                return;
+            }
+
+            notify('success', {
+                params: {
+                    title: 'Agendamento criado com sucesso!'
+                }
+            });
+
+            navigator.navigate('Agendamentos');
+        }
+
+    }
 
     return (
         <>
@@ -196,7 +266,8 @@ const AgendarServico = ({ route }: any) => {
                                     mode='date'
                                     value={dataSelecionada}
                                     onChange={handleDate}
-                                    maximumDate={new Date()}
+                                    minimumDate={new Date()}
+
                                 />
                             )}
                         </Pressable>
@@ -211,10 +282,12 @@ const AgendarServico = ({ route }: any) => {
                                 {horarios.map((horario, index) => {
                                     return (
                                         <HorarioItem
-                                            horario={horario}
+                                            horario={horario.horaInicio}
+                                            onPress={() => setHorarioSelecionado(horario.horaInicio)}
+                                            isSelected={horario.horaInicio === horarioSelecionado}
+                                            disabled={horario.disponivel ? false : true}
                                             key={index}
-                                            onPress={() => setHorarioSelecionado(horario)}
-                                            isSelected={horario === horarioSelecionado}
+
                                         />
                                     )
                                 })}
@@ -225,7 +298,7 @@ const AgendarServico = ({ route }: any) => {
 
                     <View style={styles.containerButtons}>
                         <Button style={{ width: '40%' }} onPress={() => navigator.goBack()} mode='outlined'>Cancelar</Button>
-                        <Button style={{ width: '40%', opacity: !horarioSelecionado ? .8 : 1 }} mode='contained' disabled={horarioSelecionado ? false : true}>Agendar</Button>
+                        <Button style={{ width: '40%', opacity: !horarioSelecionado ? .8 : 1 }} mode='contained' disabled={horarioSelecionado ? false : true} onPress={agendar}>Agendar</Button>
                     </View>
 
                 </ScrollView>

@@ -207,8 +207,8 @@ const PerfilProfissional = ({ route }: any) => {
                                     <Text variant='bodyLarge' style={styles.sobre}>{profissionalData?.sobre}</Text>
                                 </View>
 
-                                {/* <View style={styles.secao}>
-                                    <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Endereço</Text>
+                                <View style={styles.secao}>
+                                    <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Local de Atendimento</Text>
 
                                     <Text>{profissionalData?.endereco.logradouro} - {profissionalData?.endereco.bairro}</Text>
                                     <Text>{profissionalData?.endereco.cidade}, {profissionalData?.endereco.estado}</Text>
@@ -233,16 +233,16 @@ const PerfilProfissional = ({ route }: any) => {
                                         </MapView>
                                     </View>
 
-                                </View> */}
+                                </View>
 
                                 {profissionalData?.outras_informacoes && (
                                     <View style={[styles.secao, { paddingBottom: 40 }]}>
                                         <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold }}>Outras informações</Text>
 
-                                        {Object.keys(profissionalData.outras_informacoes).map(info => {
+                                        {Object.keys(profissionalData.outras_informacoes).map((info, index) => {
                                             if (info === 'atende_homecare') {
                                                 return (
-                                                    <CustomListItem text='Atendimento Domiciliar' />
+                                                    <CustomListItem key={index + 1} text='Atendimento Domiciliar' />
                                                 )
                                             }
 
@@ -269,7 +269,7 @@ const PerfilProfissional = ({ route }: any) => {
                             <View style={styles.containerServicos}>
                                 {servicosProfissional.map(servico => {
                                     return (
-                                        <ServicoCardHorizontal data={servico} />
+                                        <ServicoCardHorizontal data={servico} key={servico.id} />
                                     )
                                 })}
                             </View>
