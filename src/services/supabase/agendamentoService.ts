@@ -1,10 +1,10 @@
-import { IAgendamento, IAgendamentoFull, Tabelas } from "@/@types/databaseTypes"
+import { IAgendamento, IAgendamentoFull, StatusAgendamentos, Tabelas } from "@/@types/databaseTypes"
 import { supabase } from "."
 import { format } from "date-fns";
 
 const joins = `
     *,
-    servico:servico_id(*, procedimento:procedimento_id(*)),
+    servico:servico_id(*, procedimento:procedimento_id(*), endereco:endereco_id(*)),
     profissional:profissional_id(*)
 `;
 
@@ -25,6 +25,7 @@ const checarHorario = async ({ dataHoraFim, dataHoraInicio, profissionalId, serv
         .lte('data_hora_fim', dataHoraFim.toISOString())
         .eq('profissional_id', profissionalId)
         .eq('servico_id', servicoId)
+        .neq('status', 2)
         .returns<IAgendamento[]>();
 
 
@@ -91,9 +92,57 @@ const getById = async (id: number, clienteId: string) => {
 
 }
 
+const getStatusByNumero = (numero: number) => {
+    switch (numero) {
+        case 1:
+            return 'Concluído';
+
+        case 2:
+            return 'Cancelado';
+
+        case 3:
+            return 'Agendado';
+
+        case 4:
+            return 'Pagamento pendente';
+
+    }
+}
+
+const cancelarById = async (id: number) => {
+    const { error } = await supabase
+        .from(Tabelas.agendamento)
+        .update({ status: StatusAgendamentos.Cancelado })
+        .eq('id', id);
+
+    if (error) {
+        console.log('ERRO AO CANCELAR AGENDAMENTO POR ID: ', error);
+        return error.message;
+    }
+
+    return null;
+}
+
+const setStatusById = async (idAgendamento: number, status: number) => {
+    const { error } = await supabase
+        .from(Tabelas.agendamento)
+        .update({ status })
+        .eq('id', idAgendamento);
+
+    if (error) {
+        console.log('ERRO AO ATUALIZAR O STATUS DO AGENDAMENTO: ', error);
+        return error.message;
+    }
+
+    return null;
+}
+
 export const agendamentoService = {
     checarHorario,
     create,
     getByClienteId,
-    getById
+    getById,
+    getStatusByNumero,
+    cancelarById,
+    setStatusById
 }

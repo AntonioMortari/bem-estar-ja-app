@@ -13,6 +13,13 @@ export enum Tabelas {
     favoritos = 'favoritos'
 }
 
+export enum StatusAgendamentos {
+    Concluido = 1,
+    Cancelado = 2,
+    Agendado = 3,
+    AguardandoPagamento = 4
+}
+
 export interface ICliente {
     id: string;
     cpf: string;

@@ -8,6 +8,7 @@ import { IAgendamentoFull } from '@/@types/databaseTypes';
 import { useFocusEffect } from '@react-navigation/native';
 import { theme } from '@/theme/paper';
 import { ServicoAgendamento } from '@/components/shared/ServicoAgendamento';
+import { RefreshControl } from 'react-native';
 
 
 const Agendamentos = () => {
@@ -16,18 +17,20 @@ const Agendamentos = () => {
     const [agendamentos, setAgendamentos] = useState<IAgendamentoFull[]>([]);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [refreshing, setRefreshing] = useState<boolean>(false);
+
+    const getAgendamentos = async () => {
+        setIsLoading(false);
+        if (clienteData) {
+            const result = await agendamentoService.getByClienteId(clienteData.id);
+
+            setAgendamentos(result);
+        }
+
+        setIsLoading(false);
+    }
 
     useEffect(() => {
-        const getAgendamentos = async () => {
-            setIsLoading(false);
-            if (clienteData) {
-                const result = await agendamentoService.getByClienteId(clienteData.id);
-
-                setAgendamentos(result);
-            }
-
-            setIsLoading(false);
-        }
 
         getAgendamentos();
     }, [])
@@ -39,14 +42,20 @@ const Agendamentos = () => {
                     <ActivityIndicator animating color={theme.colors.primary} />
                 </View>
             ) : (
-                <ScrollView style={styles.container}>
+                <ScrollView style={styles.container}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={getAgendamentos}
+                        />
+                    }>
                     <View style={styles.header}>
                         <Text variant='headlineSmall' style={styles.titulo}>Meus Agendamentos</Text>
                     </View>
 
                     <View style={styles.containerAgendamentos}>
                         {agendamentos.map(agendamento => {
-                            return(
+                            return (
                                 <ServicoAgendamento
                                     data={agendamento}
                                     key={agendamento.id}
@@ -54,7 +63,7 @@ const Agendamentos = () => {
                             );
                         })}
                     </View>
-                    
+
                 </ScrollView>
             )}
         </>

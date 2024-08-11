@@ -60,6 +60,7 @@ const Login = () => {
                                 left={<TextInput.Icon color={theme.colors.grayDark} icon='email' />}
                                 onChangeText={onChange}
                                 value={value}
+                                keyboardType='email-address'
                                 style={{ backgroundColor: 'transparent' }}
                             />
                             {errors.email?.message && (

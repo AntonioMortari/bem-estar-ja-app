@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 25,
-        marginTop: 20
+        marginTop: 20,
+        justifyContent: 'center'
     }
 })
 

@@ -40,9 +40,9 @@ const Busca = ({ route }: any) => {
     const [valorBusca, setValorBusca] = useState<string>(route.params?.searchValueParam || '');
 
 
-    useFocusEffect(() => {
+    useEffect(() => {
         focusSearchbar();
-    })
+    }, [])
 
     const searchbarRef: any = useRef();
 

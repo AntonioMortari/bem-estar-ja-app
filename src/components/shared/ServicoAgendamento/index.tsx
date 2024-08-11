@@ -31,7 +31,6 @@ const ServicoAgendamento = ({ data }: IServicoAgendamentoProps) => {
                     <View style={styles.containerIcons}>
 
                         <IconWithLabel
-                            // duração
                             label={`${format(data.data_hora_inicio, 'dd/MM/yyyy')} - ${format(data.data_hora_inicio, 'HH:mm')}`}
                             icon={<AntDesign name="clockcircleo" size={20} color={theme.colors.primary} />}
                         />

@@ -40,7 +40,7 @@ const PerguntasFrequesntes = () => {
                     </Text>
                 </List.Accordion>
                 
-                <List.Accordion title=' Como posso avaliar um serviço?' style={{ backgroundColor: theme.colors.light, borderRadius: 8, marginTop: 20 }}>
+                <List.Accordion title=' Como encontrar suporte?' style={{ backgroundColor: theme.colors.light, borderRadius: 8, marginTop: 20 }}>
                     <Text variant='bodyLarge' style={{textAlign: 'justify', marginTop: 10, paddingHorizontal: 10}}>Para mais informações ou suporte, acesse Perfil {'->'} Ajuda e Suporte.
                     </Text>
                 </List.Accordion>

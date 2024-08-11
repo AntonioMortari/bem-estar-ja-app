@@ -227,7 +227,7 @@ const Home = () => {
                 </View>
             ) : (
                 <>
-                    {servicosEmDestaque.length === 0 && servicosNovidades.length === 0 && profissionais.length === 0 ? (
+                    {servicosEmDestaque.length === 0 && servicosNovidades.length === 0 && profissionais.length === 0 && cidadeEstadoAtual ? (
                         <View style={{ gap: 20, alignItems: 'center', justifyContent: 'center', marginTop: 20, height: '100%' }}>
 
                             <View style={{ alignItems: 'center', gap: 10 }}>

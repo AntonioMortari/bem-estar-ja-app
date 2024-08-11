@@ -278,20 +278,26 @@ const AgendarServico = ({ route }: any) => {
                             </View>
                         ) : (
 
-                            <View style={styles.containerHorarios}>
-                                {horarios.map((horario, index) => {
-                                    return (
-                                        <HorarioItem
-                                            horario={horario.horaInicio}
-                                            onPress={() => setHorarioSelecionado(horario.horaInicio)}
-                                            isSelected={horario.horaInicio === horarioSelecionado}
-                                            disabled={horario.disponivel ? false : true}
-                                            key={index}
+                            <>
+                                {horarios.length === 0 ? (
+                                    <Text style={{marginTop: 25}} variant='titleMedium'>Nenhum horário disponível para este dia</Text>
+                                ) : (
+                                    <View style={styles.containerHorarios}>
+                                        {horarios.map((horario, index) => {
+                                            return (
+                                                <HorarioItem
+                                                    horario={horario.horaInicio}
+                                                    onPress={() => setHorarioSelecionado(horario.horaInicio)}
+                                                    isSelected={horario.horaInicio === horarioSelecionado}
+                                                    disabled={horario.disponivel ? false : true}
+                                                    key={index}
 
-                                        />
-                                    )
-                                })}
-                            </View>
+                                                />
+                                            )
+                                        })}
+                                    </View>
+                                )}
+                            </>
                         )}
 
                     </View>
@@ -301,7 +307,7 @@ const AgendarServico = ({ route }: any) => {
                         <Button style={{ width: '40%', opacity: !horarioSelecionado ? .8 : 1 }} mode='contained' disabled={horarioSelecionado ? false : true} onPress={agendar}>Agendar</Button>
                     </View>
 
-                </ScrollView>
+                </ScrollView >
             )}
         </>
 
