@@ -2,8 +2,8 @@ import { theme } from '@/theme/paper';
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    container:{
-        
+    container: {
+
     },
     header: {
         backgroundColor: theme.colors.primary,

@@ -40,19 +40,18 @@ const getByCPF = async (cpf: string): Promise<ICliente | string | null> => {
     return data;
 }
 
-const create = async (clienteData: ICliente): Promise<ICliente | string> => {
+const create = async (clienteData: ICliente) => {
     const { data, error } = await supabase
         .from(Tabelas.clientes)
         .insert<ICliente>(clienteData)
-        .returns<ICliente>()
-        .single();
+        .select()
 
     if (error) {
         console.log('ERRO AO CRIAR CLIENTE: ', error);
         return error.message;
     }
 
-    return data;
+    return data[0];
 
 }
 

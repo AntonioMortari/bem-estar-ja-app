@@ -26,7 +26,7 @@ import { TituloSecao } from '@/components/shared/TituloSecao';
 
 
 const DetalhesServico = ({ route }: any) => {
-    const { clienteData } = useAuth();
+    const { clienteData, setClienteData } = useAuth();
 
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
 
@@ -114,6 +114,10 @@ const DetalhesServico = ({ route }: any) => {
 
             setAtualizarIsFavorito(!atualizarIsFavorito);
         }
+
+        if (clienteData) {
+            setClienteData({ ...clienteData })
+        }
     }
 
     const removerServicoFavoritos = async () => {
@@ -121,6 +125,10 @@ const DetalhesServico = ({ route }: any) => {
             const result = await favoritoService.removerServicoFavorito(clienteData.id, servicoData.id);
 
             setAtualizarIsFavorito(!atualizarIsFavorito);
+        }
+
+        if (clienteData) {
+            setClienteData({ ...clienteData })
         }
     }
 
@@ -200,6 +208,7 @@ const DetalhesServico = ({ route }: any) => {
                                         }}
                                     >
                                         <Marker
+                                            pinColor={theme.colors.primaryDark}
                                             coordinate={{
                                                 latitude: -22.89897976290171,
                                                 longitude: -47.06117848896528

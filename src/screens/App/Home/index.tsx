@@ -201,7 +201,9 @@ const Home = () => {
 
                 <View style={styles.titulo}>
                     {/* Título/Saudação */}
-                    <Text variant='headlineMedium' style={{ color: theme.colors.light }}><Text style={{ color: theme.colors.light }}>{utils.getSaudacao()},</Text> {clienteData?.nome.split(' ')[0]}</Text>
+                    {clienteData?.nome && (
+                        <Text variant='headlineMedium' style={{ color: theme.colors.light }}><Text style={{ color: theme.colors.light }}>{utils.getSaudacao()},</Text> {clienteData?.nome.split(' ')[0]}</Text>
+                    )}
                 </View>
 
             </View>

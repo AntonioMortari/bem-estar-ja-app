@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     },
     containerBusca: {
         marginTop: -30,
-        alignItems: 'center'
+    alignItems: 'center'
     },
     inputBusca: {
         backgroundColor: theme.colors.light,

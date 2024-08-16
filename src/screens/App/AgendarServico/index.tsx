@@ -62,7 +62,7 @@ const AgendarServico = ({ route }: any) => {
         // Use Promise.all para lidar com as promessas
         const horariosResult = await Promise.all(
             horarios.map(async (horario) => {
-                const dataHoraInicio = new Date(`${format(dataSelecionada, 'yyyy-MM-dd')}T${horario}:00.432Z`);
+                const dataHoraInicio = new Date(`${format(dataSelecionada, 'yyyy-MM-dd')}T${horario}:00.000Z`);
                 const dataHoraFim = addMinutes(dataHoraInicio, servicoData?.procedimento.duracao || 30);
 
                 if (servicoData) {

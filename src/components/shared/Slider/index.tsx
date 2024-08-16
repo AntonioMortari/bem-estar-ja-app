@@ -30,14 +30,15 @@ const Slider = ({ data }: ISliderProps) => {
                 onMomentumScrollEnd={handleScroll}
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => String(item.id)}
-                renderItem={({ item }) => <Image source={{ uri: item.foto }} width={width} style={{height: 200, width: width}} />}
+                renderItem={({ item }) => <Image source={{ uri: item.foto }} width={width} style={{ height: 200, width: width }} />}
             />
             {data.length > 1 && (
                 <View style={styles.containerDots}>
                     {data.map((_, i) => {
                         return (
                             <View
-                                style={[styles.dot, {backgroundColor: i === indexAtivo ? theme.colors.primary : theme.colors.grayLight}]}
+                                key={i}
+                                style={[styles.dot, { backgroundColor: i === indexAtivo ? theme.colors.primary : theme.colors.grayLight }]}
                             />
                         )
                     })}

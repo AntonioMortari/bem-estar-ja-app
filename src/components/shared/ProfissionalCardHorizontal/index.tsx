@@ -17,6 +17,8 @@ interface IProfissionalCardHorizontalProps {
 
 const ProfissionalCardHorizontal = ({ data }: IProfissionalCardHorizontalProps) => {
 
+    console.log(data)
+        ;
     const navigation = useNavigation<TAppClienteNavigationRoutes>();
 
     return (

@@ -120,6 +120,11 @@ export interface IFavorito {
     profissional_id?: number;
 
 }
+export interface IFavoritoFull extends IFavorito {
+    servico?: IServicoFull;
+    profissional?: IProfissionalFull
+
+}
 
 export interface IFotosProfissionais {
     id: number;

@@ -6,11 +6,30 @@ import { IconWithLabel } from "../IconLabel";
 
 import { FontAwesome6 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { format } from "date-fns";
+import { addHours, format } from "date-fns";
 import { theme } from "@/theme/paper";
 import { useNavigation } from "@react-navigation/native";
 import { TAppClienteNavigationRoutes } from "@/@types/routes/AppRoutes";
 import { StatusItem } from "../StatusItem";
+import { toZonedTime, format as formatZonedTime, formatInTimeZone } from 'date-fns-tz';
+
+function formatLocalTime(utcDateStr: string, formatStr: string = 'HH:mm'): string {
+    // Cria um objeto Date a partir da string UTC
+    const utcDate = new Date(utcDateStr);
+  
+    // Obtém o fuso horário local do sistema
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  
+    // Converte a data UTC para o fuso horário local
+    const zonedDate = toZonedTime(utcDate, timeZone);
+  
+    // Formata a data no fuso horário local de acordo com o formato especificado
+    const formattedDate = formatInTimeZone(utcDate, timeZone, formatStr);
+
+    console.log(formattedDate)
+  
+    return formattedDate;
+  }
 
 interface IServicoAgendamentoProps {
     data: IAgendamentoFull;
@@ -31,7 +50,7 @@ const ServicoAgendamento = ({ data }: IServicoAgendamentoProps) => {
                     <View style={styles.containerIcons}>
 
                         <IconWithLabel
-                            label={`${format(data.data_hora_inicio, 'dd/MM/yyyy')} - ${format(data.data_hora_inicio, 'HH:mm')}`}
+                            label={`${format(data.data_hora_inicio, 'dd/MM/yyyy')} - ${format(addHours(data.data_hora_inicio, 3), 'HH:mm')}`}
                             icon={<AntDesign name="clockcircleo" size={20} color={theme.colors.primary} />}
                         />
 

@@ -11,6 +11,7 @@ import { ServicoAgendamento } from '@/components/shared/ServicoAgendamento';
 import { RefreshControl } from 'react-native';
 
 
+
 const Agendamentos = () => {
     const { clienteData } = useAuth();
 
@@ -31,7 +32,6 @@ const Agendamentos = () => {
     }
 
     useEffect(() => {
-
         getAgendamentos();
     }, [])
 
@@ -50,7 +50,7 @@ const Agendamentos = () => {
                         />
                     }>
                     <View style={styles.header}>
-                        <Text variant='headlineSmall' style={styles.titulo}>Meus Agendamentos</Text>
+                        <Text variant='headlineMedium' style={styles.titulo}>Meus Agendamentos</Text>
                     </View>
 
                     <View style={styles.containerAgendamentos}>

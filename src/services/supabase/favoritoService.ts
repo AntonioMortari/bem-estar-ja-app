@@ -1,5 +1,12 @@
-import { IFavorito, Tabelas } from "@/@types/databaseTypes"
+import { IFavorito, IFavoritoFull, Tabelas } from "@/@types/databaseTypes"
 import { supabase } from "."
+
+const joins = `
+    *,
+    servico:servico_id(*, procedimento: procedimento_id(*), endereco:endereco_id(*), profissional:profissional_id(*)),
+    profissional:profissional_id(*, area_atuacao:area_atuacao_id(*))
+
+`
 
 
 const checkServicoIsFavorito = async (usuarioId: string, servicoId: number): Promise<boolean> => {
@@ -107,11 +114,13 @@ const adicionarProfissionalFavorito = async (usuarioId: string, profissionalId: 
 const getServicosFavoritos = async (usuarioId: string): Promise<IFavorito[] | null> => {
     const { data, error } = await supabase
         .from(Tabelas.favoritos)
-        .select('*')
+        .select(joins)
         .eq('usuario_id', usuarioId)
+        .eq('tipo_favorito_id', 1)
         .returns<IFavorito[]>();
 
     if (error) {
+        console.log('ERRO AO BUSCAR SERVIÇOS FAVORITOS: ', error);
         return [];
     }
 
@@ -119,7 +128,21 @@ const getServicosFavoritos = async (usuarioId: string): Promise<IFavorito[] | nu
 }
 
 const getProfissionaisFavoritos = async (usuarioId: string) => {
-    // retornar profissionais favoritos, com base no id do usuário
+    const { data, error } = await supabase
+        .from(Tabelas.favoritos)
+        .select(joins)
+        .eq('usuario_id', usuarioId)
+        .eq('tipo_favorito_id', 2)
+        .returns<IFavoritoFull[]>();
+
+    if (error) {
+        console.log('ERRO AO BUSCAR PROFISSIONAIS FAVORITOS: ', error);
+        return [];
+    }
+
+    const result = data.filter(favorito => favorito.profissional);
+
+    return result || [];
 }
 
 
@@ -133,5 +156,6 @@ export const favoritoService = {
     adicionarServicoFavorito,
     removerServicoFavorito,
 
-    getServicosFavoritos
+    getServicosFavoritos,
+    getProfissionaisFavoritos
 }

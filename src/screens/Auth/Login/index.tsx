@@ -11,9 +11,10 @@ import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Image } from 'react-native';
-import { Button, HelperText, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, HelperText, Text, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { TAuthClienteNavigationRoutes } from '@/@types/routes/AuthRoutes';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 type TLoginFormData = z.infer<typeof loginSchema> // tipagem dos dados com base no schema de login
 
@@ -27,8 +28,11 @@ const Login = () => {
         resolver: zodResolver(loginSchema)
     });
 
-    const onSubmit = ({ email, senha}: TLoginFormData) => {
+    const onSubmit = ({ email, senha }: TLoginFormData) => {
+        setButtonIsLoading(true);
         handleLogin(email, senha);
+
+        setButtonIsLoading(false);
     }
 
     const goCadastro = () => {
@@ -101,8 +105,15 @@ const Login = () => {
                     onPress={handleSubmit(onSubmit)}
                     loading={buttonIsLoading}
                     style={{ marginTop: 30 }}
+                    disabled={buttonIsLoading ? true : false}
                 >
-                    Acessar
+                    {buttonIsLoading ? (
+                        <ActivityIndicator animating color={theme.colors.light} />
+                    ) : (
+                        <>
+                            Acessar
+                        </>
+                    )}
                 </Button>
 
                 <Button

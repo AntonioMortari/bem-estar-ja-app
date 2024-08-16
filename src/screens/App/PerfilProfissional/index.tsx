@@ -40,7 +40,7 @@ const PerfilProfissional = ({ route }: any) => {
     const [atualizarIsFavorito, setAtualizarIsFavorito] = useState<boolean>(false);
     const [secaoSelecionada, setSecaoSelecionada] = useState<string>('informacoes');
 
-    const { clienteData } = useAuth();
+    const { clienteData, setClienteData } = useAuth();
 
     const navigator = useNavigation<TAppClienteNavigationRoutes>();
 
@@ -106,12 +106,20 @@ const PerfilProfissional = ({ route }: any) => {
 
             setAtualizarIsFavorito(!atualizarIsFavorito);
         }
+
+        if (clienteData) {
+            setClienteData({ ...clienteData })
+        }
     }
 
     const removerProfissionalFavorito = async () => {
         if (clienteData && profissionalData) {
             await favoritoService.removerProfissionalFavorito(clienteData.id, profissionalData.id);
             setAtualizarIsFavorito(!atualizarIsFavorito);
+        }
+
+        if (clienteData) {
+            setClienteData({ ...clienteData })
         }
     }
 
@@ -225,6 +233,7 @@ const PerfilProfissional = ({ route }: any) => {
                                             }}
                                         >
                                             <Marker
+                                                pinColor={theme.colors.primaryDark}
                                                 coordinate={{
                                                     latitude: -22.89897976290171,
                                                     longitude: -47.06117848896528
@@ -269,7 +278,7 @@ const PerfilProfissional = ({ route }: any) => {
                             <View style={styles.containerServicos}>
                                 {servicosProfissional.map(servico => {
                                     return (
-                                        <ServicoCardHorizontal data={servico} key={servico.id} />
+                                        <ServicoCardHorizontal data={servico} key={servico.procedimento.id} />
                                     )
                                 })}
                             </View>
