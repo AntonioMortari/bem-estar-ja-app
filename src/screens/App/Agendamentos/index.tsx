@@ -42,29 +42,46 @@ const Agendamentos = () => {
                     <ActivityIndicator animating color={theme.colors.primary} />
                 </View>
             ) : (
-                <ScrollView style={styles.container}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={getAgendamentos}
-                        />
-                    }>
-                    <View style={styles.header}>
-                        <Text variant='headlineMedium' style={styles.titulo}>Meus Agendamentos</Text>
-                    </View>
-
-                    <View style={styles.containerAgendamentos}>
-                        {agendamentos.map(agendamento => {
-                            return (
-                                <ServicoAgendamento
-                                    data={agendamento}
-                                    key={agendamento.id}
+                <>
+                    {agendamentos.length > 0 ? (
+                        <ScrollView style={styles.container}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={getAgendamentos}
                                 />
-                            );
-                        })}
-                    </View>
+                            }>
+                            <View style={styles.header}>
+                                <Text variant='headlineMedium' style={styles.titulo}>Meus Agendamentos</Text>
+                            </View>
 
-                </ScrollView>
+                            <View style={styles.containerAgendamentos}>
+                                {agendamentos.map(agendamento => {
+                                    return (
+                                        <ServicoAgendamento
+                                            data={agendamento}
+                                            key={agendamento.id}
+                                        />
+                                    );
+                                })}
+                            </View>
+
+                        </ScrollView>
+                    ) : (
+                        <ScrollView style={styles.container}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={getAgendamentos}
+                                />
+                            }>
+                            <View style={styles.header}>
+                                <Text variant='headlineMedium' style={styles.titulo}>Meus Agendamentos</Text>
+                            </View>
+                            <Text variant='headlineSmall' style={{ textAlign: 'center', marginTop: 35, paddingHorizontal: 10 }}>Você ainda não criou nenhum agendamento!</Text>
+                        </ScrollView>
+                    )}
+                </>
             )}
         </>
     );

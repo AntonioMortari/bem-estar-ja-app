@@ -194,7 +194,7 @@ const PerfilProfissional = ({ route }: any) => {
                                     <List.Section>
                                         <Text variant='titleMedium' style={{ fontFamily: theme.fonts.semibold, marginBottom: 5 }}>Horário de funcionamento</Text>
                                         <List.Accordion title={
-                                            <HorarioFuncionamentoItem data={horarioFuncionamentoData.filter(horarioFuncionamento => horarioFuncionamento.dia_semana === new Date().getDay())[0]} key={horarioFuncionamentoData.filter(horarioFuncionamento => horarioFuncionamento.dia_semana === new Date().getDay())[0].id} />
+                                               <HorarioFuncionamentoItem data={horarioFuncionamentoData.filter(horarioFuncionamento => horarioFuncionamento.dia_semana === new Date().getDay())[0]} key={horarioFuncionamentoData.filter(horarioFuncionamento => horarioFuncionamento.dia_semana === new Date().getDay())[0].id} />
                                         } >
                                             {horarioFuncionamentoData.map(horarioFuncionamento => {
                                                 if (horarioFuncionamento.id != horarioFuncionamentoData.filter(horarioFuncionamento => horarioFuncionamento.dia_semana === new Date().getDay())[0].id) {

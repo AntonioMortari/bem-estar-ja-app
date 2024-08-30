@@ -14,13 +14,15 @@ interface IHorarioFuncionamentItemProps {
 const HorarioFuncionamentoItem = ({ data }: IHorarioFuncionamentItemProps) => {
     const [diaSemanaAtual] = useState<number>(new Date().getDay());
 
+    console.log(data)
+
     return (
         <View style={styles.container}>
             <Text style={[styles.diaSemana, diaSemanaAtual === data.dia_semana && { fontFamily: theme.fonts.semibold}]} variant='bodyMedium'>{utils.getDiaSemanaByNumero(data.dia_semana)}</Text>
             {!data.hora_fim && !data.hora_inicio ? (
                 <Text  variant='bodyLarge'>Fechado</Text>
             ) : (
-                <Text variant='bodyLarge'>{data.hora_inicio} - {data.hora_fim}</Text>
+                <Text variant='bodyLarge' style={{width: '100%'}}>{data.hora_inicio} - {data.hora_fim}</Text>
             )}
         </View>
     );
